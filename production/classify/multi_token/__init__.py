@@ -17,9 +17,11 @@ but at classification a single multi-token FST is needed.
     MathFst
     RangeFst
     ScoreFst
+    AttachedTokensFst
 
 """
 
+from en_us_normalization.production.classify.multi_token.attached import AttachedTokensFst
 from en_us_normalization.production.classify.multi_token.math import MathFst
 from en_us_normalization.production.classify.multi_token.range import RangeFst
 from en_us_normalization.production.classify.multi_token.score import ScoreFst

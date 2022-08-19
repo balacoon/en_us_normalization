@@ -12,13 +12,7 @@ from pynini.lib import pynutil
 
 from learn_to_normalize.grammar_utils.base_fst import BaseFst
 from learn_to_normalize.grammar_utils.data_loader import load_union
-from learn_to_normalize.grammar_utils.shortcuts import (
-    ALPHA,
-    CHAR,
-    DIGIT,
-    NOT_SPACE,
-    TO_UPPER,
-)
+from learn_to_normalize.grammar_utils.shortcuts import ALPHA, CHAR, DIGIT, NOT_SPACE, TO_UPPER
 
 
 class ElectronicFst(BaseFst):

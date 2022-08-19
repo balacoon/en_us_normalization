@@ -9,10 +9,7 @@ tokenize and classify measures
 import pynini
 from en_us_normalization.production.classify.decimal import DecimalFst
 from en_us_normalization.production.classify.fraction import FractionFst
-from en_us_normalization.production.english_utils import (
-    singular_to_plural_fst,
-    get_data_file_path,
-)
+from en_us_normalization.production.english_utils import get_data_file_path, singular_to_plural_fst
 from pynini.lib import pynutil
 
 from learn_to_normalize.grammar_utils.base_fst import BaseFst

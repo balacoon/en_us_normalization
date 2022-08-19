@@ -86,4 +86,3 @@ def singular_to_plural_fst():
     ).optimize()
 
     return singular_to_plural
-

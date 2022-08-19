@@ -72,6 +72,7 @@ class DateFst(BaseFst):
       date { year: "60" era: "s" }
 
     """
+
     def __init__(self):
         super().__init__(name="date")
 
