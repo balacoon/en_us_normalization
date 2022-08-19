@@ -13,8 +13,13 @@ def test_money():
         grammar.apply("$12.05")
         == 'money { currency: "$" decimal { integer_part: "12" fractional_part: "05" } }'
     )
-    assert grammar.apply("£100,000") == 'money { currency: "£" decimal { integer_part: "100000" } }'
-    assert grammar.apply("$1") == 'money { currency: "$" decimal { integer_part: "1" } }'
+    assert (
+        grammar.apply("£100,000")
+        == 'money { currency: "£" decimal { integer_part: "100000" } }'
+    )
+    assert (
+        grammar.apply("$1") == 'money { currency: "$" decimal { integer_part: "1" } }'
+    )
     assert (
         grammar.apply("1.5$")
         == 'money { decimal { integer_part: "1" fractional_part: "5" } currency: "$" }'

@@ -68,7 +68,12 @@ class TelephoneFst(BaseFst):
 
         # extension of format "-****"
         extension = delete_dash + pynini.closure(DIGIT, 1, 4)
-        extension = insert_space + pynutil.insert('extension: "') + extension + pynutil.insert('"')
+        extension = (
+            insert_space
+            + pynutil.insert('extension: "')
+            + extension
+            + pynutil.insert('"')
+        )
         optional_extension = pynini.closure(extension, 0, 1)
 
         graph = optional_country_code + number + optional_extension

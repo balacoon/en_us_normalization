@@ -7,30 +7,36 @@ Entry point to tokenize and classify
 """
 
 import pynini
-from classify.abbreviation import AbbreviationFst
-from classify.address import AddressFst
-from classify.cardinal import CardinalFst
-from classify.date import DateFst
-from classify.decimal import DecimalFst
-from classify.electronic import ElectronicFst
-from classify.fraction import FractionFst
-from classify.measure import MeasureFst
-from classify.money import MoneyFst
-from classify.multi_token.math import MathFst
-from classify.multi_token.range import RangeFst
-from classify.multi_token.score import ScoreFst
-from classify.ordinal import OrdinalFst
-from classify.punctuation_rules import get_punctuation_rules
-from classify.roman import RomanFst
-from classify.shortening import ShorteningFst
-from classify.telephone import TelephoneFst
-from classify.time import TimeFst
-from classify.verbatim import VerbatimFst
-from classify.word import WordFst
+from en_us_normalization.production.classify.abbreviation import AbbreviationFst
+from en_us_normalization.production.classify.address import AddressFst
+from en_us_normalization.production.classify.cardinal import CardinalFst
+from en_us_normalization.production.classify.date import DateFst
+from en_us_normalization.production.classify.decimal import DecimalFst
+from en_us_normalization.production.classify.electronic import ElectronicFst
+from en_us_normalization.production.classify.fraction import FractionFst
+from en_us_normalization.production.classify.measure import MeasureFst
+from en_us_normalization.production.classify.money import MoneyFst
+from en_us_normalization.production.classify.multi_token.math import MathFst
+from en_us_normalization.production.classify.multi_token.range import RangeFst
+from en_us_normalization.production.classify.multi_token.score import ScoreFst
+from en_us_normalization.production.classify.ordinal import OrdinalFst
+from en_us_normalization.production.classify.punctuation_rules import (
+    get_punctuation_rules,
+)
+from en_us_normalization.production.classify.roman import RomanFst
+from en_us_normalization.production.classify.shortening import ShorteningFst
+from en_us_normalization.production.classify.telephone import TelephoneFst
+from en_us_normalization.production.classify.time import TimeFst
+from en_us_normalization.production.classify.verbatim import VerbatimFst
+from en_us_normalization.production.classify.word import WordFst
 from pynini.lib import pynutil
 
 from learn_to_normalize.grammar_utils.base_fst import BaseFst
-from learn_to_normalize.grammar_utils.shortcuts import delete_extra_space, delete_space, wrap_token
+from learn_to_normalize.grammar_utils.shortcuts import (
+    delete_extra_space,
+    delete_space,
+    wrap_token,
+)
 
 
 class ClassifyFst(BaseFst):

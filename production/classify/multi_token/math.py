@@ -5,16 +5,22 @@ tokenize and classify math equations
 """
 
 import pynini
-from classify.cardinal import CardinalFst
-from classify.decimal import DecimalFst
-from classify.fraction import FractionFst
-from classify.measure import MeasureFst
-from classify.money import MoneyFst
-from classify.punctuation_rules import get_punctuation_rules
+from en_us_normalization.production.classify.cardinal import CardinalFst
+from en_us_normalization.production.classify.decimal import DecimalFst
+from en_us_normalization.production.classify.fraction import FractionFst
+from en_us_normalization.production.classify.measure import MeasureFst
+from en_us_normalization.production.classify.money import MoneyFst
+from en_us_normalization.production.classify.punctuation_rules import (
+    get_punctuation_rules,
+)
 from pynini.lib import pynutil
 
 from learn_to_normalize.grammar_utils.base_fst import BaseFst
-from learn_to_normalize.grammar_utils.shortcuts import delete_space, insert_space, wrap_token
+from learn_to_normalize.grammar_utils.shortcuts import (
+    delete_space,
+    insert_space,
+    wrap_token,
+)
 
 
 class MathFst(BaseFst):

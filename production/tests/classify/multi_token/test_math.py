@@ -14,11 +14,11 @@ def test_math():
     assert (
         grammar.apply("2x5")
         == 'tokens { cardinal { count: "2" } } tokens { name: "by" } '
-           'tokens { cardinal { count: "5" } }'
+        'tokens { cardinal { count: "5" } }'
     )
     assert (
         grammar.apply("3 - 4 + 1.5")
         == 'tokens { cardinal { count: "3" } } tokens { name: "minus" } '
-           'tokens { cardinal { count: "4" } } tokens { name: "plus" } '
-           'tokens { decimal { integer_part: "1" fractional_part: "5" } }'
+        'tokens { cardinal { count: "4" } } tokens { name: "plus" } '
+        'tokens { decimal { integer_part: "1" fractional_part: "5" } }'
     )

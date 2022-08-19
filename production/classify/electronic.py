@@ -7,12 +7,18 @@ tokenize and classify electronic addresses
 """
 
 import pynini
-from english_utils import get_data_file_path
+from en_us_normalization.production.english_utils import get_data_file_path
 from pynini.lib import pynutil
 
 from learn_to_normalize.grammar_utils.base_fst import BaseFst
 from learn_to_normalize.grammar_utils.data_loader import load_union
-from learn_to_normalize.grammar_utils.shortcuts import ALPHA, CHAR, DIGIT, NOT_SPACE, TO_UPPER
+from learn_to_normalize.grammar_utils.shortcuts import (
+    ALPHA,
+    CHAR,
+    DIGIT,
+    NOT_SPACE,
+    TO_UPPER,
+)
 
 
 class ElectronicFst(BaseFst):
@@ -90,7 +96,9 @@ class ElectronicFst(BaseFst):
             pynini.accep(x.strip()) @ pynini.closure(TO_UPPER) for x in protocols
         ]
         protocols = pynini.union(*protocols)
-        spoken_protocols = load_union(get_data_file_path("electronic", "spoken_protocols.tsv"))
+        spoken_protocols = load_union(
+            get_data_file_path("electronic", "spoken_protocols.tsv")
+        )
         protocols |= spoken_protocols
         remove_optional_slashes = pynutil.delete(pynini.closure("/"))
         protocols = (
@@ -139,7 +147,9 @@ class ElectronicFst(BaseFst):
         domain_suffix = pynutil.add_weight(
             pynini.closure(ALPHA, 2) @ pynini.closure(TO_UPPER), 1.1
         )
-        domain_suffix |= load_union(get_data_file_path("electronic", "spoken_domains.tsv"))
+        domain_suffix |= load_union(
+            get_data_file_path("electronic", "spoken_domains.tsv")
+        )
         domain_suffix = pynini.closure("." + domain_suffix, 1)
         domain = domain_prefix + domain + domain_suffix
         domain = pynutil.insert('domain: "') + domain + pynutil.insert('"')

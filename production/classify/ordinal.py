@@ -7,7 +7,7 @@ tokenize and classify ordinals
 """
 
 import pynini
-from classify.cardinal import CardinalFst
+from en_us_normalization.production.classify.cardinal import CardinalFst
 from pynini.lib import pynutil
 
 from learn_to_normalize.grammar_utils.base_fst import BaseFst

@@ -5,11 +5,17 @@ tokenize and classify scores
 """
 
 import pynini
-from classify.cardinal import CardinalFst
-from classify.punctuation_rules import get_punctuation_rules
+from en_us_normalization.production.classify.cardinal import CardinalFst
+from en_us_normalization.production.classify.punctuation_rules import (
+    get_punctuation_rules,
+)
 
 from learn_to_normalize.grammar_utils.base_fst import BaseFst
-from learn_to_normalize.grammar_utils.shortcuts import delete_space, insert_space, wrap_token
+from learn_to_normalize.grammar_utils.shortcuts import (
+    delete_space,
+    insert_space,
+    wrap_token,
+)
 
 
 class ScoreFst(BaseFst):

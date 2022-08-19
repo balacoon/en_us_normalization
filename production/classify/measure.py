@@ -7,9 +7,12 @@ tokenize and classify measures
 """
 
 import pynini
-from classify.decimal import DecimalFst
-from classify.fraction import FractionFst
-from english_utils import SINGULAR_TO_PLURAL, get_data_file_path
+from en_us_normalization.production.classify.decimal import DecimalFst
+from en_us_normalization.production.classify.fraction import FractionFst
+from en_us_normalization.production.english_utils import (
+    SINGULAR_TO_PLURAL,
+    get_data_file_path,
+)
 from pynini.lib import pynutil
 
 from learn_to_normalize.grammar_utils.base_fst import BaseFst
@@ -84,7 +87,9 @@ class MeasureFst(BaseFst):
         self.fst = final_graph.optimize()
 
     @staticmethod
-    def _add_units_suffix(prefix_units: pynini.FstLike, suffix_units: pynini.FstLike) -> pynini.FstLike:
+    def _add_units_suffix(
+        prefix_units: pynini.FstLike, suffix_units: pynini.FstLike
+    ) -> pynini.FstLike:
         """
         units can have suffix, i.e. plain unit is "m", but unit with a suffix
         is "m/s^2". this helper function takes units transducer and adds optional

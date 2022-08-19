@@ -7,14 +7,11 @@ tokenize and classify regular words
 """
 
 import pynini
-from english_utils import get_data_file_path
+from en_us_normalization.production.english_utils import get_data_file_path
 from pynini.lib import pynutil
 
 from learn_to_normalize.grammar_utils.base_fst import BaseFst
-from learn_to_normalize.grammar_utils.shortcuts import (
-    ALPHA,
-    TO_LOWER,
-)
+from learn_to_normalize.grammar_utils.shortcuts import ALPHA, TO_LOWER
 
 
 class WordFst(BaseFst):

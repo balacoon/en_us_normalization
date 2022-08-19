@@ -6,7 +6,7 @@ Copyright 2015 and onwards Google, Inc.
 expand shortenings
 """
 
-from english_utils import get_data_file_path
+from en_us_normalization.production.english_utils import get_data_file_path
 from pynini.lib import pynutil
 
 from learn_to_normalize.grammar_utils.base_fst import BaseFst

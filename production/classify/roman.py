@@ -7,8 +7,8 @@ tokenize and classify roman numbers
 """
 
 import pynini
-from classify.cardinal import CardinalFst
-from english_utils import get_data_file_path
+from en_us_normalization.production.classify.cardinal import CardinalFst
+from en_us_normalization.production.english_utils import get_data_file_path
 from pynini.lib import pynutil
 
 from learn_to_normalize.grammar_utils.base_fst import BaseFst

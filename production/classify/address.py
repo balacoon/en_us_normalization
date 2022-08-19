@@ -5,12 +5,19 @@ tokenizes and classifies addresses
 """
 
 import pynini
-from english_utils import get_data_file_path
+from en_us_normalization.production.english_utils import get_data_file_path
 from pynini.lib import pynutil
 
 from learn_to_normalize.grammar_utils.base_fst import BaseFst
 from learn_to_normalize.grammar_utils.data_loader import load_mapping
-from learn_to_normalize.grammar_utils.shortcuts import ALPHA, DIGIT, LOWER, TO_LOWER, TO_UPPER, UPPER
+from learn_to_normalize.grammar_utils.shortcuts import (
+    ALPHA,
+    DIGIT,
+    LOWER,
+    TO_LOWER,
+    TO_UPPER,
+    UPPER,
+)
 
 
 class AddressFst(BaseFst):

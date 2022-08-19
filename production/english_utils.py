@@ -7,8 +7,8 @@ Helpers specific to english grammars
 import os
 
 import pynini
-from pynini.lib import pynutil
 from pynini.examples import plurals
+from pynini.lib import pynutil
 
 from learn_to_normalize.grammar_utils.shortcuts import SIGMA
 
@@ -45,17 +45,39 @@ def get_data_file_path(*args) -> str:
     return os.path.join(get_data_dir(), *args)
 
 
-suppletive_path = get_data_file_path('suppletive.tsv')
+suppletive_path = get_data_file_path("suppletive.tsv")
 suppletive = pynini.string_file(suppletive_path)
 _c = pynini.union(
-    "b", "c", "d", "f", "g", "h", "j", "k", "l", "m", "n", "p", "q", "r", "s", "t", "v", "w", "x", "y", "z"
+    "b",
+    "c",
+    "d",
+    "f",
+    "g",
+    "h",
+    "j",
+    "k",
+    "l",
+    "m",
+    "n",
+    "p",
+    "q",
+    "r",
+    "s",
+    "t",
+    "v",
+    "w",
+    "x",
+    "y",
+    "z",
 )
 _ies = SIGMA + _c + pynini.cross("y", "ies")
 _es = SIGMA + pynini.union("s", "sh", "ch", "x", "z") + pynutil.insert("es")
 _s = SIGMA + pynutil.insert("s")
 
 graph_plural = plurals._priority_union(
-    suppletive, plurals._priority_union(_ies, plurals._priority_union(_es, _s, SIGMA), SIGMA), SIGMA
+    suppletive,
+    plurals._priority_union(_ies, plurals._priority_union(_es, _s, SIGMA), SIGMA),
+    SIGMA,
 ).optimize()
 
 SINGULAR_TO_PLURAL = graph_plural
