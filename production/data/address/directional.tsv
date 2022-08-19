@@ -1,0 +1,8 @@
+n	north
+s	south
+e	east
+w	west
+ne	north east
+nw	north west
+se	south east
+sw	south west

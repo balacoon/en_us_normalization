@@ -1,0 +1,264 @@
+class_spec {
+  semiotic_class: "cardinal"
+  style_spec {
+    record_spec {
+      field_path: "cardinal.prefix"
+    }
+    record_spec {
+      field_path: "cardinal.negative"
+    }
+    record_spec {
+      field_path: "cardinal.count"
+    }
+  }
+}
+class_spec {
+  semiotic_class: "ordinal"
+  style_spec {
+    record_spec {
+      field_path: "ordinal.order"
+    }
+  }
+}
+class_spec {
+  semiotic_class: "fraction"
+  style_spec {
+    record_spec {
+      field_path: "fraction.negative"
+    }
+    record_spec {
+      field_path: "fraction.integer_part"
+    }
+    record_spec {
+      field_path: "fraction.numerator"
+    }
+    record_spec {
+      field_path: "fraction.denominator"
+    }
+  }
+}
+class_spec {
+  semiotic_class: "decimal"
+  style_spec {
+    record_spec {
+      field_path: "decimal.negative"
+    }
+    record_spec {
+      field_path: "decimal.integer_part"
+    }
+    record_spec {
+      field_path: "decimal.fractional_part"
+    }
+  }
+}
+class_spec {
+  semiotic_class: "date"
+  style_spec {
+    name: "mdy"
+    record_spec {
+      field_path: "date.month"
+    }
+    record_spec {
+      field_path: "date.day"
+    }
+    record_spec {
+      field_path: "date.year"
+    }
+    record_spec {
+      field_path: "date.era"
+    }
+  }
+  style_spec {
+    name: "dmy"
+    record_spec {
+      field_path: "date.day"
+    }
+    record_spec {
+      field_path: "date.month"
+    }
+    record_spec {
+      field_path: "date.year"
+    }
+    record_spec {
+      field_path: "date.era"
+    }
+  }
+}
+class_spec {
+  semiotic_class: "electronic"
+  style_spec {
+    record_spec {
+      field_path: "electronic.protocol"
+    }
+    record_spec {
+      field_path: "electronic.username"
+    }
+    record_spec {
+      field_path: "electronic.password"
+    }
+    record_spec {
+      field_path: "electronic.domain"
+    }
+    record_spec {
+      field_path: "electronic.port"
+    }
+    record_spec {
+      field_path: "electronic.path"
+    }
+  }
+}
+class_spec {
+  semiotic_class: "measure"
+  style_spec {
+    record_spec {
+      field_path: "measure.decimal.negative"
+    }
+    record_spec {
+      field_path: "measure.decimal.integer_part"
+    }
+    record_spec {
+      field_path: "measure.decimal.fractional_part"
+    }
+    record_spec {
+      field_path: "measure.units"
+    }
+  }
+  style_spec {
+    name: "with_explicit_fraction"
+    record_spec {
+      field_path: "measure.fraction.negative"
+    }
+    record_spec {
+      field_path: "measure.fraction.integer_part"
+    }
+    record_spec {
+      field_path: "measure.fraction.numerator"
+    }
+    record_spec {
+      field_path: "measure.fraction.denominator"
+    }
+    record_spec {
+      field_path: "measure.units"
+    }
+  }
+}
+class_spec {
+  semiotic_class: "money"
+  style_spec {
+    record_spec {
+      field_path: "money.integer_part"
+      suffix_spec {
+        field_path: "money.currency"
+      }
+    }
+    record_spec {
+      field_path: "money.fractional_part"
+      suffix_spec {
+        field_path: "money.currency"
+      }
+    }
+  }
+}
+class_spec {
+  semiotic_class: "roman"
+  style_spec {
+    name: "cardinal"
+    record_spec {
+      field_path: "roman.prefix"
+    }
+    record_spec {
+      field_path: "roman.cardinal.count"
+    }
+  }
+  style_spec {
+    name: "ordinal"
+    record_spec {
+      field_path: "roman.prefix"
+    }
+    record_spec {
+      field_path: "roman.ordinal.order"
+    }
+  }
+}
+class_spec {
+  semiotic_class: "telephone"
+  style_spec {
+    record_spec {
+      field_path: "telephone.country_code"
+    }
+    record_spec {
+      field_path: "telephone.number_part"
+    }
+    record_spec {
+      field_path: "telephone.extension"
+    }
+  }
+}
+class_spec {
+  semiotic_class: "time"
+  style_spec {
+    record_spec {
+      field_path: "time.hours"
+    }
+    record_spec {
+      field_path: "time.minutes"
+    }
+    record_spec {
+      field_path: "time.suffix"
+    }
+    record_spec {
+      field_path: "time.zone"
+    }
+  }
+}
+class_spec {
+  semiotic_class: "verbatim"
+  style_spec {
+    record_spec {
+      field_path: "verbatim.name"
+    }
+  }
+}
+class_spec {
+  semiotic_class: "connector"
+  style_spec {
+    record_spec {
+      field_path: "connector.type"
+    }
+  }
+}
+class_spec {
+  semiotic_class: "address"
+  style_spec {
+    record_spec {
+      field_path: "address.house"
+    }
+    record_spec {
+      field_path: "address.pre_directional"
+    }
+    record_spec {
+      field_path: "address.street_name"
+    }
+    record_spec {
+      field_path: "address.street_type"
+    }
+    record_spec {
+      field_path: "address.post_directional"
+    }
+    record_spec {
+      field_path: "address.suite_type"
+    }
+    record_spec {
+      field_path: "address.suite_number"
+    }
+    record_spec {
+      field_path: "address.town"
+    }
+    record_spec {
+      field_path: "address.state"
+    }
+    record_spec {
+      field_path: "address.zip"
+    }
+  }
+}
