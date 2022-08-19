@@ -24,7 +24,7 @@ from learn_to_normalize.grammar_utils.shortcuts import (
 
 class DateFst(BaseFst):
     """
-    Finite state transducer for classifying dates. Dates can be written in a lot of different ways.
+    Finite state transducer for classifying dates. Dates can be written in a lot of different ways:
 
     - `conventional date` in a form of 2012/12/12. Multiple separators are possible: "/", "-", "."
       There might be a confusion which one is which, especially if
@@ -33,11 +33,8 @@ class DateFst(BaseFst):
       but this should be locale-dependent.
     - `written date` in a form of jan. 5, 2012. Here the order may wary. Depending on the order,
       specific style should be used (see configs/verbalizer_serialization_spec.ascii_proto).
-      Few tricks for this date format:
-
-      - day can be ordinal, i.e. have suffix "th", "st", etc.
-      - year can have era attached i.e. "960 BC"
-
+      Few tricks for this date format: 1) day can be ordinal, i.e. have suffix "th", "st", etc.;
+      2) year can have era attached i.e. "960 BC".
       In this format, some fields are optional: i.e. year may be missing, day can be missing.
     - `stand-alone years` - very tricky to detect, because it requires context to understand that the number
       is a year. Fortunately transducing year as a cardinal wouldn't be a huge deal.
@@ -48,6 +45,7 @@ class DateFst(BaseFst):
       1960s or '60s. Era field is reused to mark decades, not to introduce separate field
 
     Examples of the date normalization:
+
     - jan. 5, 2012 ->
       date { month: "january" day: "5" year: "2012" }
     - jan. 5 ->
@@ -72,8 +70,8 @@ class DateFst(BaseFst):
       date { year: "1960" era: "s" }
     - '60s ->
       date { year: "60" era: "s" }
-    """
 
+    """
     def __init__(self):
         super().__init__(name="date")
 

@@ -16,15 +16,17 @@ from learn_to_normalize.grammar_utils.shortcuts import DIGIT, delete_space, inse
 class TelephoneFst(BaseFst):
     """
     Finite state transducer for classifying telephone numbers.
-    Telephone numbers consits of:
+    Telephone numbers consit of:
 
-    - country code (optional): +***
-    - number part separated by dashes or brackets: ***-***-****, or (***) ***-****
+    - country code (optional): +\*\*\*
+    - number part separated by dashes or brackets: \*\*\*-\*\*\*-\*\*\*\*, or (\*\*\*) \*\*\*-\*\*\*\*
     - extension at the end of number (optional): 1-9999
 
     Examples of input/output strings:
+
     - +1 123-123-5678-1 ->
       telephone { country_code: "1" number_part: "123 123 5678" extension: "1" }
+
     """
 
     def __init__(self):

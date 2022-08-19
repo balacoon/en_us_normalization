@@ -19,6 +19,8 @@ class ShorteningFst(BaseFst):
     All shortenings and their mappings are stored in:
 
     - shortenings/case_agnostic.tsv - shortenings that should be expanded for any case
+    - shortenings/cased.tsv - shortenings that require precise writing as in the data file to be expanded
+
     Shortenings are expanded immediately, so no need to separate verbalization
     or dedicated semiotic class.
 

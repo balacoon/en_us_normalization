@@ -10,7 +10,7 @@ import pynini
 from en_us_normalization.production.classify.decimal import DecimalFst
 from en_us_normalization.production.classify.fraction import FractionFst
 from en_us_normalization.production.english_utils import (
-    SINGULAR_TO_PLURAL,
+    singular_to_plural_fst,
     get_data_file_path,
 )
 from pynini.lib import pynutil
@@ -34,7 +34,7 @@ class MeasureFst(BaseFst):
       measure { decimal { integer_part: "1" } units: "kilogram" }
     - 300,000 km/s ->
       measure { decimal { integer_part: "300000" } units: "kilometers per second" }
-    .5kg ->
+    - .5kg ->
       measure { decimal { fractional_part: "5" } units: "kilograms" }
 
     """
@@ -58,7 +58,7 @@ class MeasureFst(BaseFst):
 
         # expand units, i.e. kg -> kilograms
         units_orig = pynini.string_file(get_data_file_path("measurements.tsv"))
-        units_plural_orig = units_orig @ SINGULAR_TO_PLURAL
+        units_plural_orig = units_orig @ singular_to_plural_fst()
         units = self._add_units_suffix(units_orig, units_orig)
         units_plural = self._add_units_suffix(units_plural_orig, units_orig)
 

@@ -34,8 +34,10 @@ class RangeFst(BaseFst):
     It is similar to ScoreFst, but number of semiotic classes between which range is possible is bigger.
 
     Examples of input / output:
+
     - 1 - 2 ->
       tokens { cardinal { count: "1" } } tokens { name: "to" } tokens { cardinal { count "2" } }
+
     """
 
     def __init__(

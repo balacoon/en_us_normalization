@@ -35,8 +35,10 @@ class MathFst(BaseFst):
     TODO: add brackets and more math symbols (power of, sum, integral, etc)
 
     Examples of input / output:
+
     - 3 + 5 ->
       tokens { cardinal { count: "3" } } tokens { name: "plus" } tokens { cardinal { count "5" } }
+
     """
 
     def __init__(

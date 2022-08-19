@@ -25,8 +25,10 @@ class ScoreFst(BaseFst):
     score transducer reuses cardinal transducer.
 
     Examples of input / output:
+
     - 1 : 2 ->
       tokens { cardinal { count: "1" } } tokens { name: "to" } tokens { cardinal { count "2" } }
+
     """
 
     def __init__(
