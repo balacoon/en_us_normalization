@@ -146,13 +146,13 @@ class_spec {
   semiotic_class: "money"
   style_spec {
     record_spec {
-      field_path: "money.integer_part"
+      field_path: "money.decimal.integer_part"
       suffix_spec {
         field_path: "money.currency"
       }
     }
     record_spec {
-      field_path: "money.fractional_part"
+      field_path: "money.decimal.fractional_part"
       suffix_spec {
         field_path: "money.currency"
       }
@@ -216,14 +216,6 @@ class_spec {
   style_spec {
     record_spec {
       field_path: "verbatim.name"
-    }
-  }
-}
-class_spec {
-  semiotic_class: "connector"
-  style_spec {
-    record_spec {
-      field_path: "connector.type"
     }
   }
 }
