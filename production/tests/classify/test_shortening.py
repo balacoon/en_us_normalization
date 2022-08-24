@@ -12,3 +12,5 @@ def test_shortening():
     assert grammar.apply("mrs") == 'name: "misses"'
     assert grammar.apply("Mrs") == 'name: "misses"'
     assert grammar.apply("Mrs.") == 'name: "misses"'
+    assert grammar.apply("Dluga St.") == 'name: "dluga street"'
+    assert grammar.apply("ST Peter") == 'name: "saint peter"'
