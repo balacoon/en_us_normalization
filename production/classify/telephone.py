@@ -16,7 +16,7 @@ from learn_to_normalize.grammar_utils.shortcuts import DIGIT, delete_space, inse
 class TelephoneFst(BaseFst):
     """
     Finite state transducer for classifying telephone numbers.
-    Telephone numbers consit of:
+    Telephone numbers consist of:
 
     - country code (optional): +\*\*\*
     - number part separated by dashes or brackets: \*\*\*-\*\*\*-\*\*\*\*, or (\*\*\*) \*\*\*-\*\*\*\*
