@@ -79,9 +79,9 @@ class AddressFst(BaseFst):
         state = pynutil.insert('state: "') + state + pynutil.insert('"')
 
         # regular zip is 5 digits
-        zip = pynini.closure(DIGIT, 5, 5)
+        zipcode = pynini.closure(DIGIT, 5, 5)
         # zip can have more 4-digit zip extension
-        zip = zip + pynini.closure(
+        zipcode = zipcode + pynini.closure(
             pynutil.delete("-") + pynini.closure(DIGIT, 4, 4), 0, 1
         )
         # british zip can have letters
@@ -96,11 +96,11 @@ class AddressFst(BaseFst):
             + pynini.closure(pynutil.delete(" "))
             + british_zip_incode
         )
-        zip |= british_zip
-        zip = pynutil.insert('zip: "') + zip + pynutil.insert('"')
+        zipcode |= british_zip
+        zipcode = pynutil.insert('zip: "') + zipcode + pynutil.insert('"')
 
         # combine house number and street
-        house_street = pynini.closure(house_number + pynini.accep(" "), 0, 1) + street
+        house_street = house_number + pynini.accep(" ") + street
         # combine suite, house number and street. suite can go before house and street
         suite_house_street = (
             suite + (pynini.accep(" ") | pynini.cross("-", " ")) + house_street
@@ -119,7 +119,7 @@ class AddressFst(BaseFst):
             suite_house_street
             + pynini.closure(pynini.accep(" ") + town, 0, 1)
             + pynini.closure(pynini.accep(" ") + state, 0, 1)
-            + pynini.closure(pynini.accep(" ") + zip, 0, 1)
+            + pynini.closure(pynini.accep(" ") + zipcode, 0, 1)
         )
         final_graph = self.add_tokens(address)
         self.fst = final_graph.optimize()
