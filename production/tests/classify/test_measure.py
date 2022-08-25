@@ -25,6 +25,11 @@ def test_measure():
         grammar.apply(".5 kg")
         == 'measure { decimal { fractional_part: "5" } units: "kilograms" }'
     )
+    # make sure "k" is not interpreted as quantity
+    assert (
+        grammar.apply("1.5kg")
+        == 'measure { decimal { integer_part: "1" fractional_part: "5" } units: "kilograms" }'
+    )
     assert (
         grammar.apply("1/2 kg")
         == 'measure { fraction { numerator: "1" denominator: "2" } units: "kilograms" '
