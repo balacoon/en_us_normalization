@@ -12,7 +12,7 @@ from en_us_normalization.production.english_utils import get_data_file_path
 from pynini.lib import pynutil
 
 from learn_to_normalize.grammar_utils.base_fst import BaseFst
-from learn_to_normalize.grammar_utils.shortcuts import delete_space, insert_space
+from learn_to_normalize.grammar_utils.shortcuts import delete_extra_space, delete_space, insert_space, DIGIT
 
 
 class FractionFst(BaseFst):
@@ -56,13 +56,13 @@ class FractionFst(BaseFst):
             + pynutil.insert('"')
         )
         optional_integer = pynini.closure(
-            integer_part + delete_space + insert_space, 0, 1
+            integer_part + delete_extra_space, 0, 1
         )
         # fraction - two cardinals separated with "/"
         fraction_separator = delete_space + pynutil.delete("/") + delete_space
         numerator = (
             pynutil.insert('numerator: "')
-            + cardinal.get_digits_fst()
+            + pynini.closure(DIGIT, 1, 2) @ cardinal.get_digits_fst()
             + pynutil.insert('" ')
         )
         denominator = (
