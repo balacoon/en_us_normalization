@@ -13,7 +13,7 @@ from pynini.lib import pynutil
 
 from learn_to_normalize.grammar_utils.base_fst import BaseFst
 from learn_to_normalize.grammar_utils.data_loader import load_union
-from learn_to_normalize.grammar_utils.shortcuts import CHAR, SIGMA, insert_space
+from learn_to_normalize.grammar_utils.shortcuts import CHAR, SIGMA, insert_space, DIGIT
 
 
 class RomanFst(BaseFst):
@@ -85,10 +85,12 @@ class RomanFst(BaseFst):
         cardinal_roman_prefix = (
             self._load_prefixes("cardinal_prefixes.tsv") + roman @ cardinal.single_fst
         )
-        # make ordinal from roman
+        # make ordinal from roman. allow only values < 10
+        ordinal_numbers = roman @ DIGIT
+        ordinal_numbers = ordinal_numbers @ cardinal.get_digits_fst()
         ordinal_roman = (
             pynutil.insert('ordinal { order: "')
-            + roman @ cardinal.get_digits_fst()
+            + ordinal_numbers
             + pynutil.insert('" }')
         )
         ordinal_roman_prefix = (
