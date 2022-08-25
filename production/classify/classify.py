@@ -103,8 +103,14 @@ class ClassifyFst(BaseFst):
         attached = AttachedTokensFst(
             cardinal, abbreviation, word, left_punct, right_punct
         )
-        slash = SlashFst(abbreviation, word, left_punct, right_punct)
-        multi_token = score.fst | math.fst | fromto.fst | attached.fst | slash.fst
+        slash = SlashFst(abbreviation, word, date, left_punct, right_punct)
+        multi_token = (
+            pynutil.add_weight(score.fst, 3.0)  # not to overshadow time
+            | math.fst
+            | fromto.fst
+            | attached.fst
+            | slash.fst
+        )
 
         # repeating token
         token |= multi_token

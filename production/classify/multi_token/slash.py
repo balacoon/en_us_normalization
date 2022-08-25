@@ -7,6 +7,7 @@ tokenize and classify two tokens separated by slash
 import pynini
 from en_us_normalization.production.classify.word import WordFst
 from en_us_normalization.production.classify.abbreviation import AbbreviationFst
+from en_us_normalization.production.classify.date import DateFst
 from en_us_normalization.production.classify.punctuation_rules import get_punctuation_rules
 from pynini.lib import pynutil
 
@@ -30,6 +31,7 @@ class SlashFst(BaseFst):
         self,
         abbreviation: AbbreviationFst = None,
         word: WordFst = None,
+        date: DateFst = None,
         left_punct: pynini.FstLike = None,
         right_punct: pynini.FstLike = None,
     ):
@@ -55,10 +57,12 @@ class SlashFst(BaseFst):
             abbreviation = AbbreviationFst()
         if word is None:
             word = WordFst()
+        if date is None:
+            date = DateFst()
         if left_punct is None and right_punct is None:
             left_punct, right_punct = get_punctuation_rules()
 
-        abbr_or_word = abbreviation.fst | pynutil.add_weight(word.fst, 1.1)
+        abbr_or_word = abbreviation.fst | pynutil.add_weight(word.fst, 1.1) | date.fst
         graph = (
             wrap_token(left_punct + abbr_or_word)
             + pynini.cross("/", " ")
