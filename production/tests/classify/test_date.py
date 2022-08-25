@@ -47,3 +47,10 @@ def test_date():
     assert grammar.apply("1921") == 'date { year: "1921" }'
     assert grammar.apply("1960s") == 'date { year: "1960" era: "s" }'
     assert grammar.apply("'70s") == 'date { year: "70" era: "s" }'
+
+    # test multi token functionality
+    # range
+    assert (
+        grammar.apply("1921 - 1989")
+        == 'date { year: "1921" } } tokens { name: "to" } tokens { date { year: "1989" }'
+    )

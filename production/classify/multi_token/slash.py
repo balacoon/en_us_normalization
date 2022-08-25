@@ -62,7 +62,7 @@ class SlashFst(BaseFst):
         if left_punct is None and right_punct is None:
             left_punct, right_punct = get_punctuation_rules()
 
-        abbr_or_word = abbreviation.fst | pynutil.add_weight(word.fst, 1.1) | date.fst
+        abbr_or_word = abbreviation.fst | pynutil.add_weight(word.fst, 1.1) | date.single_fst
         graph = (
             wrap_token(left_punct + abbr_or_word)
             + pynini.cross("/", " ")
