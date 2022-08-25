@@ -83,4 +83,4 @@ class TimeFst(BaseFst):
         # if there is no suffix and minutes are zeros add "o'clock"
         hours_minutes_suffix |= hours + pynini.cross("minutes:00|", " o'clock")
         graph = hours_minutes_suffix + optional_zone
-        self.fst = self.delete_tokens(graph).optimize()
+        self._single_fst = self.delete_tokens(graph).optimize()

@@ -63,4 +63,4 @@ class VerbalizeFst(BaseFst):
             | roman.fst
             | verbatim.fst
         )
-        self.fst = graph
+        self._single_fst = graph

@@ -168,4 +168,4 @@ class MoneyFst(BaseFst):
         )
         # add to general graph but slightly less probable
         graph |= pynutil.add_weight(graph_with_quantity, 1.1)
-        self.fst = self.delete_tokens(graph).optimize()
+        self._single_fst = self.delete_tokens(graph).optimize()

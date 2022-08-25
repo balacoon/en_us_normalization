@@ -72,16 +72,16 @@ class DecimalFst(BaseFst):
         both_integer_and_fraction = integer + insert_space + fraction
         decimal_tagged = both_integer_and_fraction | integer | fraction
         optional_minus = pynini.closure(pynutil.insert("negative: ") + pynini.cross("-", '"true" '), 0, 1)
-        self.decimal_fst = optional_minus + decimal_tagged
-        graph = self.add_quantity(self.decimal_fst)
-        self.fst = self.add_tokens(graph).optimize()
+        self._basic_decimal_fst = optional_minus + decimal_tagged
+        graph = self.add_quantity(self._basic_decimal_fst)
+        self._single_fst = self.add_tokens(graph).optimize()
 
-    def get_decimal_fst(self):
+    def get_basic_decimal_fst(self):
         """
-        getter for reusable decimal digits fst, that transduces "12.56" to
-        `integer_part: "12"  fractional_part: "56"`
+        getter for reusable basic decimal digits fst, that transduces "12.56" to
+        `integer_part: "12"  fractional_part: "56"`. I.e. before adding decimal tag and without quantity.
         """
-        return self.decimal_fst
+        return self._basic_decimal_fst
 
     @staticmethod
     def add_quantity(fst: pynini.FstLike) -> pynini.FstLike:

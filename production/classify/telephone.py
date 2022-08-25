@@ -80,4 +80,4 @@ class TelephoneFst(BaseFst):
 
         graph = optional_country_code + number + optional_extension
         final_graph = self.add_tokens(graph)
-        self.fst = final_graph.optimize()
+        self._single_fst = final_graph.optimize()

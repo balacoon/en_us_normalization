@@ -53,4 +53,4 @@ class ShorteningFst(BaseFst):
             get_data_file_path("shortenings", "cased.tsv"), key_case_agnostic=False
         )
         graph = pynutil.insert('name: "') + graph + pynutil.insert('"')
-        self.fst = graph.optimize()
+        self._single_fst = graph.optimize()

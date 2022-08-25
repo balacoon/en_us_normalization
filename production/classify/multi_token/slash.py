@@ -68,4 +68,4 @@ class SlashFst(BaseFst):
             + pynini.cross("/", " ")
             + wrap_token(abbr_or_word + right_punct)
         )
-        self.fst = graph.optimize()
+        self._multi_fst = graph.optimize()

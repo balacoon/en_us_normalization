@@ -54,4 +54,4 @@ class MeasureFst(BaseFst):
             + pynutil.delete("|")
         )
         graph = numbers + units
-        self.fst = self.delete_tokens(graph).optimize()
+        self._single_fst = self.delete_tokens(graph).optimize()

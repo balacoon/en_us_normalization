@@ -217,4 +217,4 @@ class AbbreviationFst(BaseFst):
         )
         graph = abbr + optional_suffix
         graph = pynutil.insert('name: "') + graph + pynutil.insert('"')
-        self.fst = graph.optimize()
+        self._single_fst = graph.optimize()

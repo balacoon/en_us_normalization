@@ -18,7 +18,6 @@ from en_us_normalization.production.classify.measure import MeasureFst
 from en_us_normalization.production.classify.money import MoneyFst
 from en_us_normalization.production.classify.multi_token.attached import AttachedTokensFst
 from en_us_normalization.production.classify.multi_token.math import MathFst
-from en_us_normalization.production.classify.multi_token.range import RangeFst
 from en_us_normalization.production.classify.multi_token.score import ScoreFst
 from en_us_normalization.production.classify.multi_token.slash import SlashFst
 from en_us_normalization.production.classify.ordinal import OrdinalFst
@@ -88,18 +87,6 @@ class ClassifyFst(BaseFst):
         math = MathFst(
             cardinal, decimal, money, measure, fraction, left_punct, right_punct
         )
-        fromto = RangeFst(
-            cardinal,
-            decimal,
-            money,
-            measure,
-            fraction,
-            date,
-            time,
-            roman,
-            left_punct,
-            right_punct,
-        )
         attached = AttachedTokensFst(
             cardinal, abbreviation, word, left_punct, right_punct
         )
@@ -107,7 +94,6 @@ class ClassifyFst(BaseFst):
         multi_token = (
             pynutil.add_weight(score.fst, 3.0)  # not to overshadow time
             | math.fst
-            | fromto.fst
             | attached.fst
             | slash.fst
         )
@@ -118,7 +104,7 @@ class ClassifyFst(BaseFst):
         graph = delete_space + graph + delete_space
         # to enable detection of all-capitals lines - uncomment
         # graph = self._fix_all_capital_fst() @ graph
-        self.fst = graph.optimize()
+        self._single_fst = graph.optimize()
 
     @staticmethod
     def _fix_all_capital_fst():

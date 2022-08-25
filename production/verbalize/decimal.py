@@ -60,7 +60,7 @@ class DecimalFst(BaseFst):
         graph = integer | fractional | both
         optional_sign = pynini.closure(pynini.cross("negative:1|", "minus "), 0, 1)
         self.graph = optional_sign + graph + optional_quantity
-        self.fst = self.delete_tokens(self.graph).optimize()
+        self._single_fst = self.delete_tokens(self.graph).optimize()
 
     def get_graph(self):
         """

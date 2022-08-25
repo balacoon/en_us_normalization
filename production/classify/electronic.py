@@ -78,7 +78,7 @@ class ElectronicFst(BaseFst):
             protocol_username_domain_port + pynini.closure(path, 0, 1)
         )
         final_graph = self.add_tokens(protocol_username_domain_port_path)
-        self.fst = final_graph.optimize()
+        self._single_fst = final_graph.optimize()
 
     @staticmethod
     def _get_protocol_fst() -> pynini.FstLike:

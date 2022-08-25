@@ -91,7 +91,7 @@ class TimeFst(BaseFst):
 
         final_graph = (graph_hm | graph_h).optimize()
         final_graph = self.add_tokens(final_graph)
-        self.fst = final_graph.optimize()
+        self._single_fst = final_graph.optimize()
 
     @staticmethod
     def load_shortenings(name: str) -> pynini.FstLike:

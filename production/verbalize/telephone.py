@@ -55,4 +55,4 @@ class TelephoneFst(BaseFst):
         optional_extension = pynini.closure(insert_space + extension, 0, 1)
 
         graph = country_code_optional + number + optional_extension
-        self.fst = self.delete_tokens(graph).optimize()
+        self._single_fst = self.delete_tokens(graph).optimize()

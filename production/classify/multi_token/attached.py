@@ -112,4 +112,4 @@ class AttachedTokensFst(BaseFst):
             | pynutil.add_weight(word_plus_symbols, 90.0)  # this duplicates word+punctuation, so requires high weight
             | pynutil.add_weight(symbols_plus_word, 90.0)  # also low prob not to shadow punctuation + word
         )
-        self.fst = graph.optimize()
+        self._multi_fst = graph.optimize()

@@ -15,7 +15,6 @@ but at classification a single multi-token FST is needed.
     :template: class.rst
 
     MathFst
-    RangeFst
     ScoreFst
     AttachedTokensFst
 
@@ -23,5 +22,4 @@ but at classification a single multi-token FST is needed.
 
 from en_us_normalization.production.classify.multi_token.attached import AttachedTokensFst
 from en_us_normalization.production.classify.multi_token.math import MathFst
-from en_us_normalization.production.classify.multi_token.range import RangeFst
 from en_us_normalization.production.classify.multi_token.score import ScoreFst

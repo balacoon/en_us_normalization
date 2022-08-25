@@ -118,4 +118,4 @@ class AddressFst(BaseFst):
             + optional_state
             + optional_zip
         )
-        self.fst = self.delete_tokens(address).optimize()
+        self._single_fst = self.delete_tokens(address).optimize()

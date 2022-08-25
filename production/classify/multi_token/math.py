@@ -87,7 +87,7 @@ class MathFst(BaseFst):
             insert_space + delete_space
         )  # ensures there is exactly one space even if there were none
         digit_semiotic = (
-            pynutil.add_weight(cardinal.fst, 9.0)
+            pynutil.add_weight(cardinal.single_fst, 9.0)
             | pynutil.add_weight(decimal.fst, 10.0)
             | pynutil.add_weight(money.fst, 1.1)
             | pynutil.add_weight(measure.fst, 1.1)
@@ -124,4 +124,4 @@ class MathFst(BaseFst):
         )
 
         graph = simple_graph | complex_graph
-        self.fst = graph.optimize()
+        self._multi_fst = graph.optimize()

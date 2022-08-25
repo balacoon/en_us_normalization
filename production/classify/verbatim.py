@@ -36,4 +36,4 @@ class VerbatimFst(BaseFst):
         word |= (pynini.closure(NOT_SPACE) + NOT_PUNCT)
         final_graph = pynutil.insert('name: "') + word + pynutil.insert('"')
         final_graph = self.add_tokens(final_graph)
-        self.fst = final_graph.optimize()
+        self._single_fst = final_graph.optimize()

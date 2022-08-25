@@ -58,7 +58,8 @@ class CardinalFst(BaseFst):
             pynutil.insert('count: "') + self.digits + pynutil.insert('"')
         )
         graph = optional_prefix + optional_minus + self.digits_tagged
-        self.fst = self.add_tokens(graph).optimize()
+        self._single_fst = self.add_tokens(graph)
+        self.connect_to_self(connector_in="-", connector_out="to", allow_spaces=True)
 
     def get_digits_fst(self) -> pynini.FstLike:
         """

@@ -115,7 +115,7 @@ class FractionFst(BaseFst):
             pynini.cross("a ", "one "), "[BOS]", "", SIGMA
         ).optimize()
         self.graph = graph @ only_fraction_prefix
-        self.fst = self.delete_tokens(self.graph).optimize()
+        self._single_fst = self.delete_tokens(self.graph).optimize()
 
     def get_graph(self):
         """

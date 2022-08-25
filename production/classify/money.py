@@ -53,7 +53,7 @@ class MoneyFst(BaseFst):
         # when decimal doesnt have a quantity, just integer/fractional part
         decimal_wo_quantity = (
             pynutil.insert("decimal { ")
-            + decimal.get_decimal_fst()
+            + decimal.get_basic_decimal_fst()
             + pynutil.insert(" }")
         )
         currency_before_amount = currency + insert_space + decimal_wo_quantity
@@ -64,7 +64,7 @@ class MoneyFst(BaseFst):
         # because it is expanded differently.
         decimal_with_quantity = (
             pynutil.insert("decimal { ")
-            + decimal.add_quantity(decimal.get_decimal_fst())
+            + decimal.add_quantity(decimal.get_basic_decimal_fst())
             + pynutil.insert(" }")
         )
         specification_name = pynutil.insert(' style_spec_name: "with_quantity"')
@@ -75,4 +75,4 @@ class MoneyFst(BaseFst):
 
         graph = money_wo_quantity | money_with_quantity
         graph = self.add_tokens(graph)
-        self.fst = graph.optimize()
+        self._single_fst = graph.optimize()

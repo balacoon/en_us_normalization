@@ -76,7 +76,7 @@ class FractionFst(BaseFst):
         fraction |= pynini.string_file(get_data_file_path("numbers", "fractions.tsv"))
         # in resulting graph, count part of fraction is optional
         optional_minus = pynini.closure(pynutil.insert("negative: ") + pynini.cross("-", '"true" '), 0, 1)
-        self.fraction = optional_minus + optional_integer + fraction
+        fraction = optional_minus + optional_integer + fraction
 
-        final_graph = self.add_tokens(self.fraction)
-        self.fst = final_graph.optimize()
+        final_graph = self.add_tokens(fraction)
+        self._single_fst = final_graph.optimize()

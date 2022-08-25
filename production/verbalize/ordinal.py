@@ -56,7 +56,7 @@ class OrdinalFst(BaseFst):
 
         self.ordinal_far = cardinal.get_cardinal_expanding_fst() @ suffix
         graph = pynutil.delete("order:") + self.ordinal_far + pynutil.delete("|")
-        self.fst = self.delete_tokens(graph).optimize()
+        self._single_fst = self.delete_tokens(graph).optimize()
 
     def get_ordinal_expanding_fst(self):
         """

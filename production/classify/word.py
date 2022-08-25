@@ -66,4 +66,4 @@ class WordFst(BaseFst):
         word |= (apostrophe + shortened_words)
 
         word = pynutil.insert('name: "') + word + pynutil.insert('"')
-        self.fst = word.optimize()
+        self._single_fst = word.optimize()

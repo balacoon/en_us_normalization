@@ -122,7 +122,7 @@ class AddressFst(BaseFst):
             + pynini.closure(pynini.accep(" ") + zipcode, 0, 1)
         )
         final_graph = self.add_tokens(address)
-        self.fst = final_graph.optimize()
+        self._single_fst = final_graph.optimize()
 
     @staticmethod
     def _get_street_fst():

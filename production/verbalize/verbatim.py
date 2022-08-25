@@ -81,7 +81,7 @@ class VerbatimFst(BaseFst):
             delete_space, "[BOS]", "", SIGMA
         )
         graph = pynutil.delete("name:") + graph + pynutil.delete("|")
-        self.fst = self.delete_tokens(graph).optimize()
+        self._single_fst = self.delete_tokens(graph).optimize()
 
     def _build_verbatim_verbalization(
         self, letter_case: str = "to_upper"

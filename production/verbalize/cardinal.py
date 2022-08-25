@@ -45,7 +45,7 @@ class CardinalFst(BaseFst):
         number = pynutil.delete("prefix:") + pynini.accep("number") + pynini.cross("|", " ")
         optional_number = pynini.closure(number, 0, 1)
         numbers = optional_number + optional_sign + integer
-        self.fst = self.delete_tokens(numbers).optimize()
+        self._single_fst = self.delete_tokens(numbers).optimize()
 
         # few fsts that are not directly used for cardinal expansion, but are useful for other
         # semiotic classes.

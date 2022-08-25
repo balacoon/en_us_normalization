@@ -54,4 +54,4 @@ class OrdinalFst(BaseFst):
         digits = ordinal_digits @ cardinal.get_digits_fst()
         digits_tagged = pynutil.insert('order: "') + digits + pynutil.insert('"')
         final_graph = self.add_tokens(digits_tagged)
-        self.fst = final_graph.optimize()
+        self._single_fst = final_graph.optimize()

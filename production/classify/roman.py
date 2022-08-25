@@ -83,7 +83,7 @@ class RomanFst(BaseFst):
         )  # removes zero introduces by "ties"
 
         cardinal_roman_prefix = (
-            self._load_prefixes("cardinal_prefixes.tsv") + roman @ cardinal.fst
+            self._load_prefixes("cardinal_prefixes.tsv") + roman @ cardinal.single_fst
         )
         # make ordinal from roman
         ordinal_roman = (
@@ -98,10 +98,10 @@ class RomanFst(BaseFst):
 
         # stand alone roman - should have at least two digits, should be digits/teens at most
         standalone_roman = pynini.closure(CHAR, 2) @ digit_teen
-        standalone_roman = standalone_roman @ cardinal.fst
+        standalone_roman = standalone_roman @ cardinal.single_fst
 
         graph = standalone_roman | ordinal_roman_prefix | cardinal_roman_prefix
-        self.fst = self.add_tokens(graph).optimize()
+        self._single_fst = self.add_tokens(graph).optimize()
 
     @staticmethod
     def _load_prefixes(name: str) -> pynini.FstLike:

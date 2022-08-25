@@ -52,10 +52,10 @@ class ScoreFst(BaseFst):
         if left_punct is None and right_punct is None:
             left_punct, right_punct = get_punctuation_rules()
 
-        left = wrap_token(left_punct + cardinal.fst)
+        left = wrap_token(left_punct + cardinal.single_fst)
         middle = wrap_token(pynini.cross(":", 'name: "to"'))
-        right = wrap_token(cardinal.fst + right_punct)
+        right = wrap_token(cardinal.single_fst + right_punct)
         # either there is no spaces before/after : or there are
         graph = left + pynini.accep(" ") + middle + pynini.accep(" ") + right
         graph |= (left + insert_space + middle + insert_space + right)
-        self.fst = graph.optimize()
+        self._multi_fst = graph.optimize()

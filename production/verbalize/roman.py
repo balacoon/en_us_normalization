@@ -68,4 +68,4 @@ class RomanFst(BaseFst):
         )
         graph = cardinal_roman | ordinal_roman
         graph = optional_prefix + graph + pynutil.delete("|")
-        self.fst = self.delete_tokens(graph).optimize()
+        self._single_fst = self.delete_tokens(graph).optimize()
