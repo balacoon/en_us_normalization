@@ -11,3 +11,5 @@ def test_word():
     grammar = loader.get_grammar("classify.word", "WordFst")
     assert grammar.apply("hello") == 'name: "hello"'
     assert grammar.apply("don't") == 'name: "don\'t"'
+    assert grammar.apply("thomas'") == 'name: "thomas\'"'
+    assert grammar.apply("'bout") == 'name: "\'bout"'
