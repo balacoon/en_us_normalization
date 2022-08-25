@@ -108,8 +108,8 @@ class MathFst(BaseFst):
         # math equation from 2 elements
         simple_graph = left_token + fix_space + math_operators + fix_space + right_token
 
-        # add minus to math operators
-        math_operators |= wrap_token(pynini.cross("-", 'name: "minus"'))
+        # add minus to math operators, but it has to be surrounded with spaces, otherwise its likely dash
+        math_operators |= wrap_token(pynini.cross(" - ", 'name: "minus"'))
         # math equations from 3 and more elements
         repeated_token = pynini.closure(
             fix_space + math_operators + fix_space + wrap_token(digit_semiotic), 1
