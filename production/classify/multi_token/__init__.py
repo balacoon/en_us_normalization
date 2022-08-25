@@ -14,10 +14,8 @@ but at classification a single multi-token FST is needed.
     :nosignatures:
     :template: class.rst
 
-    MathFst
     AttachedTokensFst
 
 """
 
 from en_us_normalization.production.classify.multi_token.attached import AttachedTokensFst
-from en_us_normalization.production.classify.multi_token.math import MathFst

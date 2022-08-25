@@ -21,7 +21,21 @@ def test_cardinal():
         grammar.apply("12 - 15")
         == 'cardinal { count: "12" } } tokens { name: "to" } tokens { cardinal { count: "15" }'
     )
+    # sport score
     assert (
         grammar.apply("1 : 2")
         == 'cardinal { count: "1" } } tokens { name: "to" } tokens { cardinal { count: "2" }'
+    )
+    # math
+    assert (
+        grammar.apply("1 x 2 + 5")
+        == 'cardinal { count: "1" } } '
+           'tokens { name: "by" } '
+           'tokens { cardinal { count: "2" } } '
+           'tokens { name: "plus" } '
+           'tokens { cardinal { count: "5" }'
+    )
+    assert (
+        grammar.apply("4x5")
+        == 'cardinal { count: "4" } } tokens { name: "by" } tokens { cardinal { count: "5" }'
     )

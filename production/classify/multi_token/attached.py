@@ -19,7 +19,7 @@ from learn_to_normalize.grammar_utils.shortcuts import delete_space, insert_spac
 class AttachedTokensFst(BaseFst):
     """
     Attached tokens tries to deal with multi-token string which have
-    `dash` as a separator and doesn't have any separator at all.
+    `dash` as a separator or doesn't have any separator at all.
     For example "look33" or "AT&T-wireless". This FST takes advantage of the
     fact that boundary between some semiotic classes is fairly obvious.
 

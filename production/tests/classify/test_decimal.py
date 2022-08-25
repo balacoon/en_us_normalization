@@ -24,3 +24,8 @@ def test_decimal():
         grammar.apply("3 - 5")
         == 'decimal { integer_part: "3" } } tokens { name: "to" } tokens { decimal { integer_part: "5" }'
     )
+    # math
+    assert (
+        grammar.apply("3 x 5")
+        == 'decimal { integer_part: "3" } } tokens { name: "by" } tokens { decimal { integer_part: "5" }'
+    )

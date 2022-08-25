@@ -17,7 +17,6 @@ from en_us_normalization.production.classify.fraction import FractionFst
 from en_us_normalization.production.classify.measure import MeasureFst
 from en_us_normalization.production.classify.money import MoneyFst
 from en_us_normalization.production.classify.multi_token.attached import AttachedTokensFst
-from en_us_normalization.production.classify.multi_token.math import MathFst
 from en_us_normalization.production.classify.ordinal import OrdinalFst
 from en_us_normalization.production.classify.punctuation_rules import get_punctuation_rules
 from en_us_normalization.production.classify.roman import RomanFst
@@ -81,19 +80,11 @@ class ClassifyFst(BaseFst):
         token = wrap_token(left_punct + classify + right_punct)
 
         # also add multi-token taggers
-        math = MathFst(
-            cardinal, decimal, money, measure, fraction, left_punct, right_punct
-        )
         attached = AttachedTokensFst(
             cardinal, abbreviation, word, left_punct, right_punct
         )
-        multi_token = (
-            math.fst
-            | attached.fst
-        )
+        token |= attached.fst
 
-        # repeating token
-        token |= multi_token
         graph = token + pynini.closure(delete_extra_space + token)
         graph = delete_space + graph + delete_space
         # to enable detection of all-capitals lines - uncomment

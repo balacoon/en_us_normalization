@@ -76,6 +76,8 @@ class DecimalFst(BaseFst):
         graph = self.add_quantity(self._basic_decimal_fst)
         self._single_fst = self.add_tokens(graph).optimize()
         self.connect_to_self(connector_in="-", connector_out="to")
+        self.connect_to_self(connector_in=["x", "÷", "+"], connector_out=["by", "divided by", "plus"],
+                             connector_spaces="none_or_one", to_closure=True)
 
     def get_basic_decimal_fst(self):
         """
