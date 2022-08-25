@@ -23,3 +23,12 @@ def test_time():
     assert grammar.apply("2 a.m.") == 'time { hours: "2" suffix: "AM" }'
     assert grammar.apply("02:00") == 'time { hours: "2" }'
     assert grammar.apply("2:00") == 'time { hours: "2" }'
+
+    # test multi token functionality
+    # range
+    assert (
+        grammar.apply("12:30 - 12:45")
+        == 'time { hours: "12" minutes: "30" } } '
+           'tokens { name: "to" } '
+           'tokens { time { hours: "12" minutes: "45" }'
+    )
