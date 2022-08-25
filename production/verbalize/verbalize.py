@@ -42,7 +42,7 @@ class VerbalizeFst(BaseFst):
         verbatim = VerbatimFst(cardinal=cardinal)
         electronic = ElectronicFst(verbatim=verbatim, cardinal=cardinal)
         measure = MeasureFst(decimal=decimal, fraction=fraction)
-        money = MoneyFst(cardinal=cardinal)
+        money = MoneyFst(cardinal=cardinal, decimal=decimal)
         telephone = TelephoneFst(cardinal=cardinal)
         time = TimeFst(cardinal=cardinal)
 

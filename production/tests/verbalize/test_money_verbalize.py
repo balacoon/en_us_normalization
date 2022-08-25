@@ -22,3 +22,12 @@ def test_verbalize_money():
     assert grammar.apply("money|fractional_part:0|currency:$|") == "zero cents"
     assert grammar.apply("money|fractional_part:1|currency:$|") == "ten cents"
     assert grammar.apply("money|fractional_part:01|currency:$|") == "one cent"
+    # another specification style - with quantity
+    assert (
+        grammar.apply("money|integer_part:25|quantity:millions|currency:$|") == "twenty five millions of dollars"
+    )
+    assert (
+        grammar.apply(
+            "money|integer_part:1|fractional_part:5|quantity:thousands|currency:$|"
+        ) == "one point five thousands of dollars"
+    )

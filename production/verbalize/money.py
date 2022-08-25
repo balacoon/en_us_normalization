@@ -12,6 +12,7 @@ from en_us_normalization.production.english_utils import (
     singular_to_plural_fst,
 )
 from en_us_normalization.production.verbalize.cardinal import CardinalFst
+from en_us_normalization.production.verbalize.decimal import DecimalFst
 from pynini.lib import pynutil
 
 from learn_to_normalize.grammar_utils.base_fst import BaseFst
@@ -46,7 +47,7 @@ class MoneyFst(BaseFst):
 
     """
 
-    def __init__(self, cardinal: CardinalFst = None):
+    def __init__(self, cardinal: CardinalFst = None, decimal: DecimalFst = None):
         """
         constructor of money verbalizer
 
@@ -54,10 +55,14 @@ class MoneyFst(BaseFst):
         ----------
         cardinal: CardinalFst
             reusing cardinal transducer to expand integer/fraction parts of money
+        decimal: DecimalFst
+            reusing decimal transducer to expand money when there is explicit quantity
         """
         super().__init__(name="money")
         if cardinal is None:
             cardinal = CardinalFst()
+        if decimal is None:
+            decimal = DecimalFst(cardinal=cardinal)
 
         # verbalize integer part together with currency
         major_currency = pynini.string_file(
@@ -154,4 +159,13 @@ class MoneyFst(BaseFst):
             | (integer_part + insert_space + fraction_part)
         )
         graph = optional_sign + graph
+        # another option is money with quantity
+        graph_with_quantity = (
+            decimal.get_graph()
+            + pynini.cross("currency:", " of ")
+            + major_currency
+            + pynutil.delete("|")
+        )
+        # add to general graph but slightly less probable
+        graph |= pynutil.add_weight(graph_with_quantity, 1.1)
         self.fst = self.delete_tokens(graph).optimize()

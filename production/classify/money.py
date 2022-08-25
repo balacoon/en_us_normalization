@@ -50,9 +50,29 @@ class MoneyFst(BaseFst):
         currency = load_union(get_data_file_path("currency", "major.tsv"))
         currency = pynutil.insert('currency: "') + currency + pynutil.insert('"')
 
-        currency_before_amount = currency + insert_space + decimal.fst
-        currency_after_amount = decimal.fst + insert_space + currency
+        # when decimal doesnt have a quantity, just integer/fractional part
+        decimal_wo_quantity = (
+            pynutil.insert("decimal { ")
+            + decimal.get_decimal_fst()
+            + pynutil.insert(" }")
+        )
+        currency_before_amount = currency + insert_space + decimal_wo_quantity
+        currency_after_amount = decimal_wo_quantity + insert_space + currency
+        money_wo_quantity = currency_before_amount | currency_after_amount
 
-        graph = currency_before_amount | currency_after_amount
+        # when decimal has a quantity has to insert specification style name,
+        # because it is expanded differently.
+        decimal_with_quantity = (
+            pynutil.insert("decimal { ")
+            + decimal.add_quantity(decimal.get_decimal_fst())
+            + pynutil.insert(" }")
+        )
+        specification_name = pynutil.insert(' style_spec_name: "with_quantity"')
+        currency_before_amount = currency + insert_space + decimal_with_quantity
+        currency_after_amount = decimal_with_quantity + insert_space + currency
+        money_with_quantity = currency_before_amount | currency_after_amount
+        money_with_quantity += specification_name
+
+        graph = money_wo_quantity | money_with_quantity
         graph = self.add_tokens(graph)
         self.fst = graph.optimize()
