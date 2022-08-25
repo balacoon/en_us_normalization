@@ -110,7 +110,7 @@ class DateFst(BaseFst):
         final_graph = conventional_date | written_date | standalone_year | decade
         final_graph = self.add_tokens(final_graph)
         self._single_fst = final_graph.optimize()
-        self.connect_to_self(connector_in="-", connector_out="to", allow_spaces=True)
+        self.connect_to_self(connector_in="-", connector_out="to")
 
     @staticmethod
     def _get_days_fst() -> pynini.FstLike:

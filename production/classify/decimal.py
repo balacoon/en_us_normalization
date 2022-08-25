@@ -75,7 +75,7 @@ class DecimalFst(BaseFst):
         self._basic_decimal_fst = optional_minus + decimal_tagged
         graph = self.add_quantity(self._basic_decimal_fst)
         self._single_fst = self.add_tokens(graph).optimize()
-        self.connect_to_self(connector_in="-", connector_out="to", allow_spaces=True)
+        self.connect_to_self(connector_in="-", connector_out="to")
 
     def get_basic_decimal_fst(self):
         """

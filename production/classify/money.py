@@ -76,4 +76,4 @@ class MoneyFst(BaseFst):
         graph = money_wo_quantity | money_with_quantity
         graph = self.add_tokens(graph)
         self._single_fst = graph.optimize()
-        self.connect_to_self(connector_in="-", connector_out="to", allow_spaces=True)
+        self.connect_to_self(connector_in="-", connector_out="to")

@@ -80,4 +80,4 @@ class FractionFst(BaseFst):
 
         final_graph = self.add_tokens(fraction)
         self._single_fst = final_graph.optimize()
-        self.connect_to_self(connector_in="-", connector_out="to", allow_spaces=True)
+        self.connect_to_self(connector_in="-", connector_out="to")
