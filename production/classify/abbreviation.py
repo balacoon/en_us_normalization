@@ -218,3 +218,4 @@ class AbbreviationFst(BaseFst):
         graph = abbr + optional_suffix
         graph = pynutil.insert('name: "') + graph + pynutil.insert('"')
         self._single_fst = graph.optimize()
+        self.connect_to_self(connector_in="/", connector_out="", connector_spaces="none")

@@ -15,3 +15,7 @@ def test_abbreviation():
     assert grammar.apply("IEEE") == 'name: "IEEE"'
     assert grammar.apply("wwe's") == 'name: "WWE\'S"'
     assert grammar.apply("USAs") == 'name: "USA\'S"'
+
+    # multi-token
+    # slash
+    assert grammar.apply("AC/DC") == 'name: "AC" } tokens { name: "DC"'
