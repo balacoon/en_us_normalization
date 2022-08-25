@@ -19,3 +19,7 @@ def test_score():
         grammar.apply("AT&T-wireless")
         == 'tokens { name: "AT and T" } tokens { name: "wireless" }'
     )
+    # allow word to be attached to symbols
+    assert (
+        grammar.apply("Hello#") == 'tokens { name: "hello" } tokens { name: "hash" }'
+    )

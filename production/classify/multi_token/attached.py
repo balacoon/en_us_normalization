@@ -5,6 +5,7 @@ tokenize and classify merged tokens
 """
 
 import pynini
+from en_us_normalization.production.english_utils import get_data_file_path
 from en_us_normalization.production.classify.abbreviation import AbbreviationFst
 from en_us_normalization.production.classify.cardinal import CardinalFst
 from en_us_normalization.production.classify.punctuation_rules import get_punctuation_rules
@@ -68,6 +69,8 @@ class AttachedTokensFst(BaseFst):
         if left_punct is None and right_punct is None:
             left_punct, right_punct = get_punctuation_rules()
 
+        symbols = pynini.string_file(get_data_file_path("symbols.tsv")).optimize()
+        multiple_symbols = symbols + pynini.closure(insert_space + symbols)
         delete_hyphen = insert_space + pynutil.delete("-")
         optional_delete_hyphen = insert_space + pynini.closure(
             pynutil.delete("-"), 0, 1
@@ -90,9 +93,16 @@ class AttachedTokensFst(BaseFst):
             + optional_delete_hyphen
             + wrap_token(cardinal.fst + right_punct)
         )
+        # boundary between word and symbols is obvious
+        word_plus_symbols = (
+            wrap_token(left_punct + word.fst)
+            + optional_delete_hyphen
+            + wrap_token(pynutil.insert("name: \"") + multiple_symbols + pynutil.insert("\"") + right_punct)
+        )
         graph = (
             abbr_plus_word
             | abbr_plus_number
             | pynutil.add_weight(word_plus_number, 1.1)
+            | pynutil.add_weight(word_plus_symbols, 90.0)  # this duplicates word+punctuation, so requires high weight
         )
         self.fst = graph.optimize()
