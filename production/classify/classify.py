@@ -18,7 +18,6 @@ from en_us_normalization.production.classify.measure import MeasureFst
 from en_us_normalization.production.classify.money import MoneyFst
 from en_us_normalization.production.classify.multi_token.attached import AttachedTokensFst
 from en_us_normalization.production.classify.multi_token.math import MathFst
-from en_us_normalization.production.classify.multi_token.score import ScoreFst
 from en_us_normalization.production.classify.multi_token.slash import SlashFst
 from en_us_normalization.production.classify.ordinal import OrdinalFst
 from en_us_normalization.production.classify.punctuation_rules import get_punctuation_rules
@@ -83,7 +82,6 @@ class ClassifyFst(BaseFst):
         token = wrap_token(left_punct + classify + right_punct)
 
         # also add multi-token taggers
-        score = ScoreFst(cardinal)
         math = MathFst(
             cardinal, decimal, money, measure, fraction, left_punct, right_punct
         )
@@ -92,8 +90,7 @@ class ClassifyFst(BaseFst):
         )
         slash = SlashFst(abbreviation, word, date, left_punct, right_punct)
         multi_token = (
-            pynutil.add_weight(score.fst, 3.0)  # not to overshadow time
-            | math.fst
+            math.fst
             | attached.fst
             | slash.fst
         )

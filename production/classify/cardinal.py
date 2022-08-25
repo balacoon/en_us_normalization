@@ -60,6 +60,7 @@ class CardinalFst(BaseFst):
         graph = optional_prefix + optional_minus + self.digits_tagged
         self._single_fst = self.add_tokens(graph)
         self.connect_to_self(connector_in="-", connector_out="to")
+        self.connect_to_self(connector_in=":", connector_out="to", connector_spaces="none_or_one", weight=3.0)
 
     def get_digits_fst(self) -> pynini.FstLike:
         """
