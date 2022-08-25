@@ -70,7 +70,8 @@ class AttachedTokensFst(BaseFst):
             left_punct, right_punct = get_punctuation_rules()
 
         symbols = pynini.string_file(get_data_file_path("symbols.tsv")).optimize()
-        multiple_symbols = symbols + pynini.closure(insert_space + symbols)
+        # penalize adding more symbols, so if there is another option (for example punctuation) - go with that
+        multiple_symbols = symbols + pynini.closure(pynutil.add_weight(insert_space, 10) + symbols)
         delete_hyphen = insert_space + pynutil.delete("-")
         optional_delete_hyphen = insert_space + pynini.closure(
             pynutil.delete("-"), 0, 1
@@ -109,7 +110,7 @@ class AttachedTokensFst(BaseFst):
             abbr_plus_word
             | abbr_plus_number
             | pynutil.add_weight(word_plus_number, 1.1)
-            | pynutil.add_weight(word_plus_symbols, 90.0)  # this duplicates word+punctuation, so requires high weight
-            | pynutil.add_weight(symbols_plus_word, 90.0)  # also low prob not to shadow punctuation + word
+            | pynutil.add_weight(word_plus_symbols, 20)  # regular word weight is 10, avoid shadowing word + punct
+            | pynutil.add_weight(symbols_plus_word, 20)  # regular word weight is 10, avoid shadowing punct + word
         )
         self._multi_fst = graph.optimize()

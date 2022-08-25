@@ -17,3 +17,7 @@ def test_classify():
     # disambiguate time and decimal
     assert grammar.apply("1.30") == 'tokens { decimal { integer_part: "1" fractional_part: "30" } }'
     assert grammar.apply("1.30 PM") == 'tokens { time { hours: "1" minutes: "30" suffix: "PM" } }'
+
+    # disambiguate word + symbol vs word + punctiuation
+    assert grammar.apply("hello,") == 'tokens { name: "hello" right_punct: "," }'
+    assert grammar.apply("hello#") == 'tokens { name: "hello" } tokens { name: "hash" }'

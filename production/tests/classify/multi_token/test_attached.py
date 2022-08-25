@@ -23,3 +23,6 @@ def test_score():
     assert (
         grammar.apply("Hello#") == 'tokens { name: "hello" } tokens { name: "hash" }'
     )
+    assert (
+        grammar.apply("Hello#,") == 'tokens { name: "hello" } tokens { name: "hash" right_punct: "," }'
+    )
