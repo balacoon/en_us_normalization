@@ -15,3 +15,5 @@ def test_decimal():
     )
     assert grammar.apply("100") == 'decimal { integer_part: "100" }'
     assert grammar.apply(".5") == 'decimal { fractional_part: "5" }'
+    assert grammar.apply("1M") == 'decimal { integer_part: "1" quantity: "million" }'
+    assert grammar.apply("13.5k") == 'decimal { integer_part: "13" fractional_part: "5" quantity: "thousands" }'

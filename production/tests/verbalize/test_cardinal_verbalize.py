@@ -12,7 +12,7 @@ def test_verbalize_cardinal():
     loader = GrammarLoader(grammars_dir)
     grammar = loader.get_grammar("verbalize.cardinal", "CardinalFst")
     assert grammar.apply("cardinal|negative:1|count:23|") == "minus twenty three"
-    assert grammar.apply("cardinal|prefix:#|count:21|") == "number twenty one"
+    assert grammar.apply("cardinal|prefix:number|count:21|") == "number twenty one"
     assert (
         grammar.apply("cardinal|count:1231|") == "one thousand two hundred thirty one"
     )

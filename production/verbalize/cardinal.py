@@ -29,7 +29,7 @@ class CardinalFst(BaseFst):
     Examples of input/output strings:
 
     - cardinal|negative:1|count:23| -> minus twenty three
-    - cardinal|prefix:#|count:21| -> number twenty one
+    - cardinal|prefix:number|count:21| -> number twenty one
 
     """
 
@@ -42,7 +42,8 @@ class CardinalFst(BaseFst):
         integer = pynutil.delete("count:") + self.cardinal_far + pynutil.delete("|")
 
         optional_sign = pynini.closure(pynini.cross("negative:1|", "minus "), 0, 1)
-        optional_number = pynini.closure(pynini.cross("prefix:#|", "number "), 0, 1)
+        number = pynutil.delete("prefix:") + pynini.accep("number") + pynini.cross("|", " ")
+        optional_number = pynini.closure(number, 0, 1)
         numbers = optional_number + optional_sign + integer
         self.fst = self.delete_tokens(numbers).optimize()
 

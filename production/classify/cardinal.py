@@ -28,7 +28,7 @@ class CardinalFst(BaseFst):
     Examples of cardinals:
     - -23 -> cardinal { negative: "true"  count: "23" }
     - 4,123 -> cardinal { count: "4123" }
-    - # 21 -> cardinal { prefix: "#" count: "21" }
+    - # 21 -> cardinal { prefix: "number" count: "21" }
 
     """
 
@@ -44,9 +44,12 @@ class CardinalFst(BaseFst):
         )
         self.digits = digits_only | digits_with_coma
         self.digits.optimize()
-        number_prefix = pynini.accep("#") + delete_space
+        number_prefix = pynini.accep("No") | pynini.accep("NO") | pynini.accep("no")
+        number_prefix += pynini.closure(pynutil.delete("."))
+        number_prefix |= pynini.accep("#")
+        number_prefix = pynini.cross(number_prefix, "number")
         optional_prefix = pynini.closure(
-            pynutil.insert('prefix: "') + number_prefix + pynutil.insert('" '), 0, 1
+            pynutil.insert('prefix: "') + number_prefix + delete_space + pynutil.insert('" '), 0, 1
         )
         optional_minus = pynini.closure(
             pynutil.insert("negative: ") + pynini.cross("-", '"true" '), 0, 1
