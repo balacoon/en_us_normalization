@@ -18,7 +18,6 @@ from en_us_normalization.production.classify.measure import MeasureFst
 from en_us_normalization.production.classify.money import MoneyFst
 from en_us_normalization.production.classify.multi_token.attached import AttachedTokensFst
 from en_us_normalization.production.classify.multi_token.math import MathFst
-from en_us_normalization.production.classify.multi_token.slash import SlashFst
 from en_us_normalization.production.classify.ordinal import OrdinalFst
 from en_us_normalization.production.classify.punctuation_rules import get_punctuation_rules
 from en_us_normalization.production.classify.roman import RomanFst
@@ -88,11 +87,9 @@ class ClassifyFst(BaseFst):
         attached = AttachedTokensFst(
             cardinal, abbreviation, word, left_punct, right_punct
         )
-        slash = SlashFst(abbreviation, word, date, left_punct, right_punct)
         multi_token = (
             math.fst
             | attached.fst
-            | slash.fst
         )
 
         # repeating token

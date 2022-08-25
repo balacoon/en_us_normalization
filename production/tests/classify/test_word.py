@@ -13,3 +13,7 @@ def test_word():
     assert grammar.apply("don't") == 'name: "don\'t"'
     assert grammar.apply("thomas'") == 'name: "thomas\'"'
     assert grammar.apply("'bout") == 'name: "\'bout"'
+
+    # multi-token
+    # connected with slash
+    assert grammar.apply("radio/video") == 'name: "radio" } tokens { name: "video"'

@@ -67,3 +67,4 @@ class WordFst(BaseFst):
 
         word = pynutil.insert('name: "') + word + pynutil.insert('"')
         self._single_fst = word.optimize()
+        self.connect_to_self(connector_in="/", connector_out="", connector_spaces="none")
