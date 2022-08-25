@@ -8,10 +8,12 @@ tokenize and classify decimals
 
 import pynini
 from en_us_normalization.production.classify.cardinal import CardinalFst
+from en_us_normalization.production.english_utils import get_data_file_path
 from pynini.lib import pynutil
 
 from learn_to_normalize.grammar_utils.base_fst import BaseFst
-from learn_to_normalize.grammar_utils.shortcuts import DIGIT, insert_space
+from learn_to_normalize.grammar_utils.shortcuts import DIGIT, insert_space, delete_space
+from learn_to_normalize.grammar_utils.data_loader import load_union
 
 
 class DecimalFst(BaseFst):
@@ -28,10 +30,14 @@ class DecimalFst(BaseFst):
     Integer part of decimal - can be any cardinal or a single "0" for cases such as "0.5"
     Fractional part can be any sequence of digits after the dot
 
-    Examples ofr decimals and their tagging:
+    Optionally decimal can have quantity after the number. There are two options:
+    full form (for ex. "12 thousands") or short version (for ex. "12k").
+    Supported quantities are stored in data/magnitudes.tsv
 
-    - -12.5006 ->
-      decimal { negative: "true" integer_part: "12"  fractional_part: "5006" }
+    Examples for decimals and their tagging:
+
+    - -12.5006 -> decimal { negative: "true" integer_part: "12"  fractional_part: "5006" }
+    - 13k -> decimal { integer_part: "13"  quantity: "thousands" }
 
     TODO: add handling of abbreviated quantities, for ex. .5B -> decimal { fractional_part: "5" quantity: "billion" }
     """
@@ -53,7 +59,8 @@ class DecimalFst(BaseFst):
         digits = cardinal.get_digits_fst() | pynini.accep("0")
         integer = pynutil.insert('integer_part: "') + digits + pynutil.insert('"')
         fraction = (
-            pynutil.insert('fractional_part: "')
+            delete_point
+            + pynutil.insert('fractional_part: "')
             + pynini.closure(DIGIT, 1)
             + pynutil.insert('"')
         )
@@ -62,18 +69,43 @@ class DecimalFst(BaseFst):
         # 1) there is both integer and fractional part
         # 2) there is just integer part
         # 3) there is just fractional part
-        both_integer_and_fraction = integer + insert_space + delete_point + fraction
-        only_integer = integer
-        only_fraction = delete_point + fraction
-        decimal_tagged = both_integer_and_fraction | only_integer | only_fraction
+        both_integer_and_fraction = integer + insert_space + fraction
+        decimal_tagged = both_integer_and_fraction | integer | fraction
         optional_minus = pynini.closure(pynutil.insert("negative: ") + pynini.cross("-", '"true" '), 0, 1)
-        self.decimal_tagged_signed = optional_minus + decimal_tagged
-        final_graph = self.add_tokens(self.decimal_tagged_signed)
-        self.fst = final_graph.optimize()
+        self.decimal_fst = optional_minus + decimal_tagged
+        graph = self.add_quantity(self.decimal_fst)
+        self.fst = self.add_tokens(graph).optimize()
 
     def get_decimal_fst(self):
         """
         getter for reusable decimal digits fst, that transduces "12.56" to
-        "{ integer_part: "12"  fractional_part: "56" }"
+        `integer_part: "12"  fractional_part: "56"`
         """
-        return self.decimal_tagged_signed
+        return self.decimal_fst
+
+    @staticmethod
+    def add_quantity(fst: pynini.FstLike) -> pynini.FstLike:
+        """
+        helper function to add optional quantity field
+        on top of the graph
+        """
+        # quantity can be in a short form just after a number
+        singular_quantity = pynini.string_file(get_data_file_path("magnitudes.tsv"))
+        quantity = singular_quantity + pynutil.insert('s')
+        # quantity can be in a full form after a space
+        magnitudes = load_union(get_data_file_path("magnitudes.tsv"), column=1, case_agnostic=True)
+        optional_s = pynini.closure(pynini.accep("s") | pynini.cross("S", "s"), 0, 1)
+        quantity |= (delete_space + magnitudes + optional_s)
+        quantity = insert_space + pynutil.insert('quantity: "') + quantity + pynutil.insert('"')
+        optional_quantity = pynini.closure(quantity, 0, 1)
+        fst_quantity = fst + optional_quantity
+
+        # need to add another option when quantity is singular
+        one = pynini.accep("1") | pynini.accep("1.0")
+        one = pynini.cross(one, "integer_part: \"1\"")
+        one += insert_space + pynutil.insert('quantity: "') + singular_quantity + pynutil.insert('"')
+        fst_quantity |= one
+
+        return fst_quantity
+
+

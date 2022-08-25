@@ -12,4 +12,5 @@ def test_cardinal():
     assert grammar.apply("-23") == 'cardinal { negative: "true" count: "23" }'
     assert grammar.apply("1231") == 'cardinal { count: "1231" }'
     assert grammar.apply("4,123,212") == 'cardinal { count: "4123212" }'
-    assert grammar.apply("# 21") == 'cardinal { prefix: "#" count: "21" }'
+    assert grammar.apply("# 21") == 'cardinal { prefix: "number" count: "21" }'
+    assert grammar.apply("No 1") == 'cardinal { prefix: "number" count: "1" }'

@@ -19,3 +19,4 @@ def test_verbalize_decimal():
     )
     assert grammar.apply("decimal|fractional_part:05|") == "point o five"
     assert grammar.apply("decimal|integer_part:21|") == "twenty one"
+    assert grammar.apply("decimal|integer_part:1|fractional_part:5|quantity:thousands|") == "one point five thousands"

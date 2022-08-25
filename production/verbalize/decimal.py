@@ -11,7 +11,7 @@ from en_us_normalization.production.verbalize.cardinal import CardinalFst
 from pynini.lib import pynutil
 
 from learn_to_normalize.grammar_utils.base_fst import BaseFst
-from learn_to_normalize.grammar_utils.shortcuts import insert_space
+from learn_to_normalize.grammar_utils.shortcuts import insert_space, LOWER
 
 
 class DecimalFst(BaseFst):
@@ -34,7 +34,7 @@ class DecimalFst(BaseFst):
             cardinal = CardinalFst()
 
         # expand digits one by one for fractional part
-        self.fractional = (
+        fractional = (
             pynutil.insert("point")
             + pynutil.delete("fractional_part:")
             + insert_space
@@ -47,14 +47,19 @@ class DecimalFst(BaseFst):
             + cardinal.get_cardinal_expanding_fst()
             + pynutil.delete("|")
         )
+        # expand quantity - just remove tags if any
+        quantity = (
+            pynutil.delete("quantity:")
+            + pynini.closure(LOWER, 1)
+            + pynutil.delete("|")
+        )
+        optional_quantity = pynini.closure(insert_space + quantity, 0, 1)
 
         # 3 cases: when there is only integer, only fraction or both
+        both = integer + insert_space + fractional
+        graph = integer | fractional | both
         optional_sign = pynini.closure(pynini.cross("negative:1|", "minus "), 0, 1)
-        self.integer_only = optional_sign + integer
-        fraction_only = optional_sign + self.fractional
-        both = optional_sign + integer + insert_space + self.fractional
-
-        self.graph = self.integer_only | fraction_only | both
+        self.graph = optional_sign + graph + optional_quantity
         self.fst = self.delete_tokens(self.graph).optimize()
 
     def get_graph(self):
@@ -64,19 +69,3 @@ class DecimalFst(BaseFst):
         graph is reused in another semiotic class (for ex. measure)
         """
         return self.graph
-
-    def get_integer_part_fst(self):
-        """
-        helper function to expand integer part of decimal, i.e.
-        "integer_part:12|" to "twelve". Can be reused in other semiotic
-        classes, for ex. in money verbalizer
-        """
-        return self.integer_only
-
-    def get_fractional_part_fst(self):
-        """
-        helper function to expand fractional part of decimal, i.e.
-        "fractional_part:05|" to "o five". Can be reused in other semiotic
-        classes, for ex. in money verbalizer
-        """
-        return self.fractional
