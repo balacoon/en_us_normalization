@@ -13,3 +13,7 @@ def test_classify():
         grammar.apply("hello world!")
         == 'tokens { name: "hello" } tokens { name: "world" right_punct: "!" }'
     )
+
+    # disambiguate time and decimal
+    assert grammar.apply("1.30") == 'tokens { decimal { integer_part: "1" fractional_part: "30" } }'
+    assert grammar.apply("1.30 PM") == 'tokens { time { hours: "1" minutes: "30" suffix: "PM" } }'

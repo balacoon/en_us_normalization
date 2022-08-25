@@ -48,8 +48,10 @@ class TimeFst(BaseFst):
 
         # hours is mandatory to have, reuse cardinal to expand it
         # if there is trailing 0, remove it
-        hours = pynutil.add_weight(DIGIT + DIGIT, 1.2) | pynutil.add_weight(
-            pynutil.delete("0") + DIGIT, 1.1
+        hours = (
+            pynutil.add_weight(DIGIT + DIGIT, 1.2)
+            | pynutil.add_weight(pynutil.delete("0") + DIGIT, 1.1)
+            | DIGIT
         )
         hours = hours @ cardinal.get_cardinal_expanding_fst()
         # if hours are zero - use twelve

@@ -75,19 +75,22 @@ class TimeFst(BaseFst):
         minutes = pynini.cross("0", "O") + insert_space + minutes_single
         minutes |= minutes_double
         minutes = pynutil.insert('minutes: "') + minutes + pynutil.insert('"')
+        minutes = pynutil.delete("00") | insert_space + minutes
 
         # 2:30 pm, 02:30, 2:00
         graph_hm = (
             hours
-            + (pynutil.delete(":") | pynutil.delete("."))
-            + (pynutil.delete("00") | insert_space + minutes)
+            + pynutil.delete(":")
+            + minutes
             + suffix_optional
             + time_zone_optional
         )
 
         # 2 pm est
-        graph_h = hours + delete_space + insert_space + suffix + time_zone_optional
-        graph_h |= hours + delete_space + insert_space + time_zone
+        # or 2.30 pm
+        optional_minutes = pynini.closure(pynutil.delete(".") + minutes, 0, 1)
+        graph_h = hours + optional_minutes + delete_space + insert_space + suffix + time_zone_optional
+        graph_h |= hours + optional_minutes + delete_space + insert_space + time_zone
 
         final_graph = (graph_hm | graph_h).optimize()
         final_graph = self.add_tokens(final_graph)
