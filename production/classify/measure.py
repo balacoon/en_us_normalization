@@ -64,9 +64,9 @@ class MeasureFst(BaseFst):
         one = pynini.accep("1") + pynini.closure(
             pynini.accep(".") + pynini.closure("0", 1)
         )
-        decimal_with_singular_unit = one @ decimal.fst + units
+        decimal_with_singular_unit = one @ decimal.single_fst + units
         # generic case
-        decimal_with_units = decimal.fst + units_plural
+        decimal_with_units = decimal.single_fst + units_plural
         # less probable than special one
         decimal_with_units = pynutil.add_weight(decimal_with_units, 1.1)
         decimal_with_units |= decimal_with_singular_unit

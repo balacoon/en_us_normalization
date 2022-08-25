@@ -14,3 +14,10 @@ def test_cardinal():
     assert grammar.apply("4,123,212") == 'cardinal { count: "4123212" }'
     assert grammar.apply("# 21") == 'cardinal { prefix: "number" count: "21" }'
     assert grammar.apply("No 1") == 'cardinal { prefix: "number" count: "1" }'
+
+    # test multi token functionality
+    # range
+    assert (
+        grammar.apply("12 - 15")
+        == 'cardinal { count: "12" } } tokens { name: "to" } tokens { cardinal { count: "15" }'
+    )

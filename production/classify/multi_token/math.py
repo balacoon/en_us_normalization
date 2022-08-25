@@ -88,7 +88,7 @@ class MathFst(BaseFst):
         )  # ensures there is exactly one space even if there were none
         digit_semiotic = (
             pynutil.add_weight(cardinal.single_fst, 9.0)
-            | pynutil.add_weight(decimal.fst, 10.0)
+            | pynutil.add_weight(decimal.single_fst, 10.0)
             | pynutil.add_weight(money.fst, 1.1)
             | pynutil.add_weight(measure.fst, 1.1)
             | pynutil.add_weight(fraction.fst, 10.0)

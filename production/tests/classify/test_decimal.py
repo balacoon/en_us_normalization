@@ -17,3 +17,10 @@ def test_decimal():
     assert grammar.apply(".5") == 'decimal { fractional_part: "5" }'
     assert grammar.apply("1M") == 'decimal { integer_part: "1" quantity: "million" }'
     assert grammar.apply("13.5k") == 'decimal { integer_part: "13" fractional_part: "5" quantity: "thousands" }'
+
+    # test multi token functionality
+    # range
+    assert (
+        grammar.apply("3 - 5")
+        == 'decimal { integer_part: "3" } } tokens { name: "to" } tokens { decimal { integer_part: "5" }'
+    )
