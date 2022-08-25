@@ -74,7 +74,7 @@ class MeasureFst(BaseFst):
         # fraction with units, for ex. 1/2 kg
         # fraction { numerator: "1" denominator: "2" } units: "kilograms" style_spec_name: "with_explicit_fraction"
         fraction_with_units = (
-            fraction.fst
+            fraction.single_fst
             + units_plural
             + pynutil.insert(' style_spec_name: "with_explicit_fraction"')
         )

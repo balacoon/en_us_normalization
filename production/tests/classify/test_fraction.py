@@ -18,3 +18,12 @@ def test_fraction():
         grammar.apply("500,000 3 / 7")
         == 'fraction { integer_part: "500000" numerator: "3" denominator: "7" }'
     )
+
+    # test multi token functionality
+    # range
+    assert (
+        grammar.apply("1/3 - 1/2")
+        == 'fraction { numerator: "1" denominator: "3" } } '
+           'tokens { name: "to" } '
+           'tokens { fraction { numerator: "1" denominator: "2" }'
+    )

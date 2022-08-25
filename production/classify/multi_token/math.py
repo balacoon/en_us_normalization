@@ -91,7 +91,7 @@ class MathFst(BaseFst):
             | pynutil.add_weight(decimal.single_fst, 10.0)
             | pynutil.add_weight(money.single_fst, 1.1)
             | pynutil.add_weight(measure.single_fst, 1.1)
-            | pynutil.add_weight(fraction.fst, 10.0)
+            | pynutil.add_weight(fraction.single_fst, 10.0)
         )
 
         left_token = wrap_token(left_punct + digit_semiotic)
