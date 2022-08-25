@@ -99,10 +99,17 @@ class AttachedTokensFst(BaseFst):
             + optional_delete_hyphen
             + wrap_token(pynutil.insert("name: \"") + multiple_symbols + pynutil.insert("\"") + right_punct)
         )
+        # same as above, important to add for hashtags for example
+        symbols_plus_word = (
+            wrap_token(left_punct + pynutil.insert("name: \"") + multiple_symbols + pynutil.insert("\""))
+            + optional_delete_hyphen
+            + wrap_token(word.fst + right_punct)
+        )
         graph = (
             abbr_plus_word
             | abbr_plus_number
             | pynutil.add_weight(word_plus_number, 1.1)
             | pynutil.add_weight(word_plus_symbols, 90.0)  # this duplicates word+punctuation, so requires high weight
+            | pynutil.add_weight(symbols_plus_word, 90.0)  # also low prob not to shadow punctuation + word
         )
         self.fst = graph.optimize()
