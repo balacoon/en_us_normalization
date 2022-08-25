@@ -244,18 +244,18 @@ class DateFst(BaseFst):
         days = delete_space + days + delete_ordinal_suffix
         days = pynutil.insert('day: "') + days + pynutil.insert('"')
         # date in a written form
-        # dmy with optional year
-        optional_days = pynini.closure(days, 0, 1)
+        # dmy convering dm and dmy
         optional_year = pynini.closure(year_and_era, 0, 1)
         written_date_dmy = (
-            optional_days + delete_space + insert_space + month + optional_year
+            days + delete_space + insert_space + month + optional_year
         )
         written_date_dmy = pynutil.add_weight(
             written_date_dmy + pynutil.insert(' style_spec_name: "dmy"'), 1.1
         )
-        # mdy with optional day and year. days has more probability than year
-        optional_days_with_space = pynini.closure(insert_space + days, 0, 1)
-        optional_year = pynini.closure(pynutil.add_weight(year_and_era, 1.1), 0, 1)
-        written_date_mdy = month + optional_days_with_space + optional_year
+        # mdy that covers mdy, md, my. days have more prob then year
+        # mdy and md
+        written_date_mdy = month + insert_space + days + optional_year
+        # my, where year has bigger weight
+        written_date_mdy |= (month + pynutil.add_weight(year_and_era, 1.1))
         written_date = written_date_dmy | written_date_mdy
         return written_date

@@ -19,6 +19,7 @@ def test_date():
     )
     assert grammar.apply("jan 5") == 'date { month: "january" day: "5" }'
     assert grammar.apply("Jan 5") == 'date { month: "january" day: "5" }'
+    assert grammar.apply("5 Jan") == 'date { day: "5" month: "january" style_spec_name: "dmy" }'
     assert (
         grammar.apply("5 january 2012")
         == 'date { day: "5" month: "january" year: "2012" style_spec_name: "dmy" }'
