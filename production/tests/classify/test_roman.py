@@ -19,3 +19,12 @@ def test_roman():
         grammar.apply("George II")
         == 'roman { prefix: "george" ordinal { order: "2" } }'
     )
+
+    # test multi token functionality
+    # range
+    assert (
+        grammar.apply("III - VIII")
+        == 'roman { cardinal { count: "3" } } } '
+           'tokens { name: "to" } '
+           'tokens { roman { cardinal { count: "8" } }'
+    )

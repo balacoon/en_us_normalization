@@ -102,6 +102,7 @@ class RomanFst(BaseFst):
 
         graph = standalone_roman | ordinal_roman_prefix | cardinal_roman_prefix
         self._single_fst = self.add_tokens(graph).optimize()
+        self.connect_to_self(connector_in="-", connector_out="to", allow_spaces=True)
 
     @staticmethod
     def _load_prefixes(name: str) -> pynini.FstLike:
