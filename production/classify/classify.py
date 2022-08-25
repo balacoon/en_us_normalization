@@ -31,7 +31,7 @@ from en_us_normalization.production.classify.word import WordFst
 from pynini.lib import pynutil
 
 from learn_to_normalize.grammar_utils.base_fst import BaseFst
-from learn_to_normalize.grammar_utils.shortcuts import delete_extra_space, delete_space, wrap_token
+from learn_to_normalize.grammar_utils.shortcuts import delete_extra_space, delete_space, wrap_token, TO_LOWER, LOWER, CHAR
 
 
 class ClassifyFst(BaseFst):
@@ -108,5 +108,19 @@ class ClassifyFst(BaseFst):
         token |= multi_token
         graph = token + pynini.closure(delete_extra_space + token)
         graph = delete_space + graph + delete_space
-
+        # to enable detection of all-capitals lines - uncomment
+        # graph = self._fix_all_capital_fst() @ graph
         self.fst = graph.optimize()
+
+    @staticmethod
+    def _fix_all_capital_fst():
+        """
+        helper function that detects that input text is all caps
+        and converts it to lower case before feeding to main fst.
+        If there is a single lower-case symbol, fst does nothing.
+        """
+        # accepting all characters with a little penalty
+        fst = pynutil.add_weight(pynini.closure(CHAR, 1), 3.0)
+        # converting all uppercase to lower, allowing any other characters but lower case
+        fst |= pynini.closure(TO_LOWER | pynutil.add_weight(pynini.invert(LOWER), 1.1), 1)
+        return fst
