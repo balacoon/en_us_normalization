@@ -10,7 +10,7 @@ import pynini
 from pynini.lib import pynutil
 
 from learn_to_normalize.grammar_utils.base_fst import BaseFst
-from learn_to_normalize.grammar_utils.shortcuts import NOT_PUNCT, NOT_SPACE
+from learn_to_normalize.grammar_utils.shortcuts import PUNCT, NOT_PUNCT, NOT_SPACE
 
 
 class VerbatimFst(BaseFst):
@@ -27,10 +27,13 @@ class VerbatimFst(BaseFst):
 
     def __init__(self):
         super().__init__(name="verbatim")
-        # anything is classified as verbatim with very low probability. punctuation is left out
-        word = pynini.closure(NOT_PUNCT, 0) + pynini.closure(
-            pynini.closure(NOT_SPACE) + NOT_PUNCT
-        )
+        # if its just punctuation - apply verbatim to it
+        word = pynutil.add_weight(pynini.closure(PUNCT, 1), 1.1)
+        # if there is more than punctuation - allow it to go
+        # ensure that we finish on non-punctuation character.
+        # that way punctuation at the end will be left out, but punctuation at the beginning
+        # will be spelled out
+        word |= (pynini.closure(NOT_SPACE) + NOT_PUNCT)
         final_graph = pynutil.insert('name: "') + word + pynutil.insert('"')
         final_graph = self.add_tokens(final_graph)
         self.fst = final_graph.optimize()
