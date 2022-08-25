@@ -201,9 +201,9 @@ class AbbreviationFst(BaseFst):
         )
 
         # abbreviation may have a suffix, for ex s, 's or 'S
-        s = pynini.union(pynini.accep("s"), pynini.cross("S", "s"))
-        suffix = pynini.accep("s") | (pynini.accep("'") + s)
-        optional_suffix = pynini.closure(suffix, 0, 1)
+        s = pynini.cross("s", "'S")
+        s |= pynini.accep("'") + pynini.union(pynini.accep("S"), pynini.cross("s", "S"))
+        optional_suffix = pynini.closure(s, 0, 1)
 
         abbr = (
             dot_abbr

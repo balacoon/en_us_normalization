@@ -13,4 +13,5 @@ def test_abbreviation():
     assert grammar.apply("FBI") == 'name: "FBI"'
     assert grammar.apply("f.b.i.") == 'name: "FBI"'
     assert grammar.apply("IEEE") == 'name: "IEEE"'
-    assert grammar.apply("wwe's") == 'name: "WWE\'s"'
+    assert grammar.apply("wwe's") == 'name: "WWE\'S"'
+    assert grammar.apply("USAs") == 'name: "USA\'S"'
