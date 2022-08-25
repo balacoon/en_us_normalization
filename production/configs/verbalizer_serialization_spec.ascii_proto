@@ -187,12 +187,6 @@ class_spec {
     record_spec {
       field_path: "roman.cardinal.count"
     }
-  }
-  style_spec {
-    name: "ordinal"
-    record_spec {
-      field_path: "roman.prefix"
-    }
     record_spec {
       field_path: "roman.ordinal.order"
     }

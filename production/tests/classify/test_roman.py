@@ -17,5 +17,5 @@ def test_roman():
     )
     assert (
         grammar.apply("George II")
-        == 'roman { prefix: "george" ordinal { order: "2" } style_spec_name: "ordinal" }'
+        == 'roman { prefix: "george" ordinal { order: "2" } }'
     )

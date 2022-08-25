@@ -44,7 +44,7 @@ class RomanFst(BaseFst):
     - IV ->
       roman { cardinal { count: "4" } }
     - George I ->
-      roman { prefix: "george" ordinal { order: "1" } style_spec_name: "ordinal" }
+      roman { prefix: "george" ordinal { order: "1" } }
     - CHAPTER XIX ->
       roman { prefix: "chapter" cardinal { count: "1" } }
     """
@@ -94,7 +94,6 @@ class RomanFst(BaseFst):
         ordinal_roman_prefix = (
             self._load_prefixes("ordinal_prefixes.tsv")
             + ordinal_roman
-            + pynutil.insert(' style_spec_name: "ordinal"')
         )
 
         # stand alone roman - should have at least two digits, should be digits/teens at most
