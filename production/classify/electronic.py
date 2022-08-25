@@ -69,7 +69,10 @@ class ElectronicFst(BaseFst):
 
         # after domain there could be optional path
         path = (
-            pynutil.insert(' path: "') + pynini.closure(NOT_SPACE) + pynutil.insert('"')
+            pynutil.insert(' path: "')
+            + pynini.accep("/")
+            + pynini.closure(NOT_SPACE)
+            + pynutil.insert('"')
         )
         protocol_username_domain_port_path = (
             protocol_username_domain_port + pynini.closure(path, 0, 1)
