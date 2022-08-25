@@ -46,7 +46,7 @@ class AddressFst(BaseFst):
         super().__init__(name="address")
 
         # house number - just digits with optional dash, for ex. 123, 928-3313
-        house_number = pynini.closure(DIGIT | pynini.cross("-", ""), 1)
+        house_number = DIGIT + pynini.closure(DIGIT | pynini.cross("-", ""))
         house_number = pynutil.insert('house: "') + house_number + pynutil.insert('"')
 
         # street moved to separate method given complexity
