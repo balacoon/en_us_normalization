@@ -45,16 +45,16 @@ class CardinalFst(BaseFst):
         self.digits = digits_only | digits_with_coma
         self.digits.optimize()
         number_prefix = pynini.accep("#") + delete_space
-        self.optional_prefix = pynini.closure(
+        optional_prefix = pynini.closure(
             pynutil.insert('prefix: "') + number_prefix + pynutil.insert('" '), 0, 1
         )
-        self.optional_minus = pynini.closure(
+        optional_minus = pynini.closure(
             pynutil.insert("negative: ") + pynini.cross("-", '"true" '), 0, 1
         )
         self.digits_tagged = (
             pynutil.insert('count: "') + self.digits + pynutil.insert('"')
         )
-        graph = self.optional_prefix + self.optional_minus + self.digits_tagged
+        graph = optional_prefix + optional_minus + self.digits_tagged
         self.fst = self.add_tokens(graph).optimize()
 
     def get_digits_fst(self) -> pynini.FstLike:
@@ -62,9 +62,3 @@ class CardinalFst(BaseFst):
         getter for reusable fst with cardinal digits that can be reused in other transducers
         """
         return self.digits
-
-    def get_optional_minus(self) -> pynini.FstLike:
-        """
-        get for reusable fst with transducer for "-" (minus)
-        """
-        return self.optional_minus

@@ -66,7 +66,8 @@ class DecimalFst(BaseFst):
         only_integer = integer
         only_fraction = delete_point + fraction
         decimal_tagged = both_integer_and_fraction | only_integer | only_fraction
-        self.decimal_tagged_signed = cardinal.get_optional_minus() + decimal_tagged
+        optional_minus = pynini.closure(pynutil.insert("negative: ") + pynini.cross("-", '"true" '), 0, 1)
+        self.decimal_tagged_signed = optional_minus + decimal_tagged
         final_graph = self.add_tokens(self.decimal_tagged_signed)
         self.fst = final_graph.optimize()
 
