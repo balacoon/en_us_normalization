@@ -24,3 +24,12 @@ def test_money():
         grammar.apply("1.5$")
         == 'money { decimal { integer_part: "1" fractional_part: "5" } currency: "$" }'
     )
+
+    # test multi token functionality
+    # range
+    assert (
+        grammar.apply("$12 - $15")
+        == 'money { currency: "$" decimal { integer_part: "12" } } } '
+           'tokens { name: "to" } '
+           'tokens { money { currency: "$" decimal { integer_part: "15" } }'
+    )

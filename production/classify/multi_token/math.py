@@ -89,7 +89,7 @@ class MathFst(BaseFst):
         digit_semiotic = (
             pynutil.add_weight(cardinal.single_fst, 9.0)
             | pynutil.add_weight(decimal.single_fst, 10.0)
-            | pynutil.add_weight(money.fst, 1.1)
+            | pynutil.add_weight(money.single_fst, 1.1)
             | pynutil.add_weight(measure.fst, 1.1)
             | pynutil.add_weight(fraction.fst, 10.0)
         )
