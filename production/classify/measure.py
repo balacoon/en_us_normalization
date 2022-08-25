@@ -82,6 +82,7 @@ class MeasureFst(BaseFst):
         final_graph = decimal_with_units | fraction_with_units
         final_graph = self.add_tokens(final_graph)
         self._single_fst = final_graph.optimize()
+        self.connect_to_self(connector_in="-", connector_out="to", allow_spaces=True)
 
     @staticmethod
     def _add_units_suffix(

@@ -30,3 +30,12 @@ def test_measure():
         == 'measure { fraction { numerator: "1" denominator: "2" } units: "kilograms" '
         'style_spec_name: "with_explicit_fraction" }'
     )
+
+    # test multi token functionality
+    # range
+    assert (
+        grammar.apply("3kg - 5kg")
+        == 'measure { decimal { integer_part: "3" } units: "kilograms" } } '
+           'tokens { name: "to" } '
+           'tokens { measure { decimal { integer_part: "5" } units: "kilograms" }'
+    )
