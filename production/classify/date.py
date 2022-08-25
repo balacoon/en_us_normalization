@@ -11,6 +11,7 @@ from en_us_normalization.production.english_utils import get_data_file_path
 from pynini.lib import pynutil
 
 from learn_to_normalize.grammar_utils.base_fst import BaseFst
+from learn_to_normalize.grammar_utils.data_loader import load_union
 from learn_to_normalize.grammar_utils.shortcuts import (
     CHAR,
     DIGIT,
@@ -194,7 +195,7 @@ class DateFst(BaseFst):
     @staticmethod
     def _get_written_date_fst(days: pynini.FstLike) -> pynini.FstLike:
         # months in written form (full or abbreviation)
-        month = pynini.string_file(get_data_file_path("months", "names.tsv")).optimize()
+        month = load_union(get_data_file_path("months", "names.tsv"), case_agnostic=True)
         # allows "january" (from names.tsv) and "January"
         month |= (TO_LOWER + pynini.closure(CHAR)) @ month
         month_abbr = pynini.string_file(
