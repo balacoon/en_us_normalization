@@ -20,6 +20,7 @@ from en_us_normalization.production.classify.multi_token.attached import Attache
 from en_us_normalization.production.classify.multi_token.math import MathFst
 from en_us_normalization.production.classify.multi_token.range import RangeFst
 from en_us_normalization.production.classify.multi_token.score import ScoreFst
+from en_us_normalization.production.classify.multi_token.slash import SlashFst
 from en_us_normalization.production.classify.ordinal import OrdinalFst
 from en_us_normalization.production.classify.punctuation_rules import get_punctuation_rules
 from en_us_normalization.production.classify.roman import RomanFst
@@ -102,7 +103,8 @@ class ClassifyFst(BaseFst):
         attached = AttachedTokensFst(
             cardinal, abbreviation, word, left_punct, right_punct
         )
-        multi_token = score.fst | math.fst | fromto.fst | attached.fst
+        slash = SlashFst(abbreviation, word, left_punct, right_punct)
+        multi_token = score.fst | math.fst | fromto.fst | attached.fst | slash.fst
 
         # repeating token
         token |= multi_token
