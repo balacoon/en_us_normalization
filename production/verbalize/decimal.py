@@ -38,7 +38,7 @@ class DecimalFst(BaseFst):
             pynutil.insert("point")
             + pynutil.delete("fractional_part:")
             + insert_space
-            + cardinal.get_digit_by_digit_fst()
+            + (pynutil.add_weight(cardinal.get_digit_by_digit_fst(), 1.1) | pynini.cross("0", "zero"))
             + pynutil.delete("|")
         )
         # reuse cardinal to expand integer part of decimal
