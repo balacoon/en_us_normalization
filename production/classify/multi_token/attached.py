@@ -100,10 +100,15 @@ class AttachedTokensFst(BaseFst):
             + optional_delete_hyphen
             + wrap_token(pynutil.insert("name: \"") + multiple_symbols + pynutil.insert("\"") + right_punct)
         )
-        # same as above, important to add for hashtags for example
+        # same the other way around
         symbols_plus_word = (
             wrap_token(left_punct + pynutil.insert("name: \"") + multiple_symbols + pynutil.insert("\""))
             + optional_delete_hyphen
+            + wrap_token(word.fst + right_punct)
+        )
+        hashtag = (
+            wrap_token(left_punct + pynini.cross("#", "name: \"hashtag\""))
+            + insert_space
             + wrap_token(word.fst + right_punct)
         )
         graph = (
@@ -112,5 +117,6 @@ class AttachedTokensFst(BaseFst):
             | pynutil.add_weight(word_plus_number, 1.1)
             | pynutil.add_weight(word_plus_symbols, 20)  # regular word weight is 10, avoid shadowing word + punct
             | pynutil.add_weight(symbols_plus_word, 20)  # regular word weight is 10, avoid shadowing punct + word
+            | hashtag  # hashtag is overshadowed by symbols_plus_word but has higher weight
         )
         self._multi_fst = graph.optimize()
