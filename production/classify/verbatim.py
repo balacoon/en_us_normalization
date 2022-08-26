@@ -29,11 +29,11 @@ class VerbatimFst(BaseFst):
         super().__init__(name="verbatim")
         # if its just punctuation - apply verbatim to it
         word = pynutil.add_weight(pynini.closure(PUNCT, 1), 1.1)
-        # if there is more than punctuation - allow it to go
-        # ensure that we finish on non-punctuation character.
-        # that way punctuation at the end will be left out, but punctuation at the beginning
-        # will be spelled out
-        word |= (pynini.closure(NOT_SPACE) + NOT_PUNCT)
+        # if there is more than punctuation ensure that we finish on non-punctuation character.
+        # in that way, trailing punctuation on the right will go to punctuation.
+        # Also need to adjust quotation marks if any, so they don't affect parsing of tokenized/tagged string
+        verbatim_symbols = pynutil.add_weight(NOT_SPACE, 1.1) | pynini.cross('"', '\\"')
+        word |= (pynini.closure(verbatim_symbols) + NOT_PUNCT)
         final_graph = pynutil.insert('name: "') + word + pynutil.insert('"')
         final_graph = self.add_tokens(final_graph)
         self._single_fst = final_graph.optimize()

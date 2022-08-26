@@ -10,3 +10,5 @@ def test_verbatim():
     loader = GrammarLoader(grammars_dir)
     grammar = loader.get_grammar("classify.verbatim", "VerbatimFst")
     assert grammar.apply("n33dful") == 'verbatim { name: "n33dful" }'
+    # check that quotation mark is properly handled (i.e. it is escaped)
+    assert grammar.apply('123hell"$') == 'verbatim { name: "123hell\\"$" }'

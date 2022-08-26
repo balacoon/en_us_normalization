@@ -61,7 +61,7 @@ class VerbatimFst(BaseFst):
         # expand known symbols
         known_symbols = pynini.string_file(get_data_file_path("symbols.tsv")).optimize()
         # remove unknown symbols
-        unknown_symbols = pynini.cross(NOT_ALPHA, " ")
+        unknown_symbols = pynutil.delete(NOT_ALPHA)
         # partial verbatim verbalization
         self.partial_verbatim = (
             insert_space + digits
