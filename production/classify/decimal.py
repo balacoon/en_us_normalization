@@ -87,13 +87,15 @@ class DecimalFst(BaseFst):
         return self._basic_decimal_fst
 
     @staticmethod
-    def add_quantity(fst: pynini.FstLike) -> pynini.FstLike:
+    def add_quantity(fst: pynini.FstLike, extra_quantity: pynini.FstLike = None) -> pynini.FstLike:
         """
         helper function to add optional quantity field
         on top of the graph
         """
         # quantity can be in a short form just after a number
         singular_quantity = pynini.string_file(get_data_file_path("magnitudes.tsv"))
+        if extra_quantity:
+            singular_quantity |= extra_quantity
         quantity = singular_quantity + pynutil.insert('s')
         # quantity can be in a full form after a space
         magnitudes = load_union(get_data_file_path("magnitudes.tsv"), column=1, case_agnostic=True)

@@ -6,6 +6,7 @@ Copyright 2015 and onwards Google, Inc.
 tokenize and classify money
 """
 
+import pynini
 from en_us_normalization.production.classify.decimal import DecimalFst
 from en_us_normalization.production.english_utils import get_data_file_path
 from pynini.lib import pynutil
@@ -62,9 +63,11 @@ class MoneyFst(BaseFst):
 
         # when decimal has a quantity has to insert specification style name,
         # because it is expanded differently.
+        # enlarge set of supported quantities with lower-case "m"
+        extra_quantity = pynini.cross("m", "million")
         decimal_with_quantity = (
             pynutil.insert("decimal { ")
-            + decimal.add_quantity(decimal.get_basic_decimal_fst())
+            + decimal.add_quantity(decimal.get_basic_decimal_fst(), extra_quantity=extra_quantity)
             + pynutil.insert(" }")
         )
         specification_name = pynutil.insert(' style_spec_name: "with_quantity"')
