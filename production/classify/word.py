@@ -11,7 +11,7 @@ from en_us_normalization.production.english_utils import get_data_file_path
 from pynini.lib import pynutil
 
 from learn_to_normalize.grammar_utils.base_fst import BaseFst
-from learn_to_normalize.grammar_utils.data_loader import load_union
+from learn_to_normalize.grammar_utils.data_loader import load_union, load_csv
 from learn_to_normalize.grammar_utils.shortcuts import ALPHA, TO_LOWER
 
 
@@ -67,4 +67,9 @@ class WordFst(BaseFst):
 
         word = pynutil.insert('name: "') + word + pynutil.insert('"')
         self._single_fst = word.optimize()
-        self.connect_to_self(connector_in=["/", "//"], connector_out=["", ""], connector_spaces="none", to_closure=True)
+        # allow some symbols inside of words that are simply deleted
+        in_symbols = "\"|/\\%!~_$()'"
+        in_symbols_lst = [x for x in in_symbols]
+        out_symbols = ["" for _ in in_symbols_lst]
+        self.connect_to_self(connector_in=in_symbols_lst, connector_out=out_symbols, connector_spaces="none",
+                             to_closure=True, to_closure_connector=True, weight=50)
