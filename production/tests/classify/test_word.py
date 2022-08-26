@@ -17,3 +17,4 @@ def test_word():
     # multi-token
     # connected with slash
     assert grammar.apply("radio/video") == 'name: "radio" } tokens { name: "video"'
+    assert grammar.apply("radio//video") == 'name: "radio" } tokens { name: "video"'
