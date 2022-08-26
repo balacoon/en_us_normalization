@@ -1,5 +1,7 @@
 .	dot
 -	dash
+:	colon
+;	semicolon
 _	underscore
 !	exclamation mark
 @	at sign
@@ -12,13 +14,22 @@ $	dollar sign
 *	asterisk
 +	plus
 /	slash
+\	backslash
 =	equal sign
 ?	question mark
 ^	circumflex
 `	right single quote
-{	left brace
+{	left curly brace
+}	right curly brace
+\[	left square brace
+\]	right square brace
+(	left round brace
+)	right round brace
+⟨	left angle brace
+⟩	right angle brace
+<	less than sign
+>	more than sign
 |	vertical bar
-}	right brace
 ~	tilde
 Σ	sigma
 τ	tau
