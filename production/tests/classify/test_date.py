@@ -54,3 +54,7 @@ def test_date():
         grammar.apply("1921 - 1989")
         == 'date { year: "1921" } } tokens { name: "to" } tokens { date { year: "1989" }'
     )
+    assert (
+        grammar.apply("1921/1989")
+        == 'date { year: "1921" } } tokens { date { year: "1989" }'
+    )
