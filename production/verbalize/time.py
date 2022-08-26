@@ -60,7 +60,8 @@ class TimeFst(BaseFst):
         hours = pynutil.delete("hours:") + hours + pynutil.delete("|")
 
         # minutes are optional, to expand - use digit pairs expansion
-        minutes = cardinal.get_digit_pairs_fst()
+        minutes = pynutil.add_weight(cardinal.get_digit_pairs_fst(), 1.1)
+        minutes |= (pynutil.insert("o") + insert_space + DIGIT @ cardinal.get_digit_by_digit_fst())
         minutes = pynutil.delete("minutes:") + minutes + pynutil.delete("|")
         optional_minutes = pynini.closure(insert_space + minutes, 0, 1)
 

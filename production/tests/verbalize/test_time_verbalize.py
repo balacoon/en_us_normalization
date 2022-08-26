@@ -16,4 +16,4 @@ def test_verbalize_time():
     assert grammar.apply("time|hours:12|") == "twelve o'clock"
     assert grammar.apply("time|hours:12|minutes:00|") == "twelve o'clock"
     assert grammar.apply("time|hours:07|minutes:10|") == "seven ten"
-    assert grammar.apply("time|hours:07|minutes:01|") == "seven o one"
+    assert grammar.apply("time|hours:07|minutes:1|") == "seven o one"

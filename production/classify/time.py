@@ -72,8 +72,7 @@ class TimeFst(BaseFst):
         minutes_double = [str(x) for x in range(10, 60)]
         minutes_single = pynini.union(*minutes_single)
         minutes_double = pynini.union(*minutes_double)
-        minutes = pynini.cross("0", "O") + insert_space + minutes_single
-        minutes |= minutes_double
+        minutes = (pynutil.delete("0") + minutes_single) | minutes_double
         minutes = pynutil.insert('minutes: "') + minutes + pynutil.insert('"')
         minutes = pynutil.delete("00") | insert_space + minutes
 
