@@ -114,6 +114,10 @@ class ElectronicFst(BaseFst):
         """
         alpha_or_digit = ALPHA | DIGIT
         accepted_symbols = load_union(get_data_file_path("symbols.tsv"), column=0)
+        except_symbols = "/\\:"
+        except_symbols = [pynini.accep(x) for x in except_symbols]
+        except_symbols = pynini.union(*except_symbols)
+        accepted_symbols = pynini.difference(accepted_symbols, except_symbols).optimize()
         # alpha characters, digits and limited set of symbols can appear in name
         username = alpha_or_digit + pynini.closure(alpha_or_digit | accepted_symbols)
         username = pynutil.insert('username: "') + username + pynutil.insert('"')
