@@ -146,7 +146,7 @@ class ElectronicFst(BaseFst):
         )
         # domain suffix has at least two letters, i.e. "com.ua" or "eu"
         domain_suffix = pynutil.add_weight(
-            pynini.closure(ALPHA, 2) @ pynini.closure(TO_UPPER), 1.1
+            pynini.closure(ALPHA, 2, 3) @ pynini.closure(TO_UPPER), 1.1
         )
         domain_suffix |= load_union(
             get_data_file_path("electronic", "spoken_domains.tsv")
