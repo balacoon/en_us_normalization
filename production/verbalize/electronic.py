@@ -92,22 +92,17 @@ class ElectronicFst(BaseFst):
         # verbatim already prepends whitespace in front
         port = cardinal.get_digit_pairs_fst()
         port = (
-            pynini.accep("port") + pynini.cross(":", " ") + port + pynutil.delete("|")
+            insert_space + pynini.accep("port") + pynini.cross(":", " ") + port + pynutil.delete("|")
         )
-        optional_port = pynini.closure(insert_space + port, 0, 1)
 
         # expand path if its there
         # verbatim already prepends whitespace in front
         path = verbatim.get_verbatim_verbalization(letter_case="to_upper")
         path = pynutil.delete("path:") + path + pynutil.delete("|")
-        optional_path = pynini.closure(path, 0, 1)
 
         # combine everything together
-        graph = (
-            optional_protocol
-            + optional_username_pass
-            + domain
-            + optional_port
-            + optional_path
-        )
+        prefixed_domain = optional_protocol + optional_username_pass + domain
+        suffix = port | (port + path) | pynutil.add_weight(path, 1.1)
+        graph = prefixed_domain + pynini.closure(suffix, 0, 1)
+
         self._single_fst = self.delete_tokens(graph).optimize()
