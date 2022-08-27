@@ -83,7 +83,7 @@ class ClassifyFst(BaseFst):
         attached = AttachedTokensFst(
             cardinal, abbreviation, word, left_punct, right_punct
         )
-        token |= attached.fst
+        token |= pynutil.add_weight(attached.fst, 2.0)
 
         graph = token + pynini.closure(delete_extra_space + token)
         graph = delete_space + graph + delete_space
