@@ -26,6 +26,20 @@ def test_time():
     assert grammar.apply("02:05") == 'time { hours: "2" minutes: "5" }'
     assert grammar.apply("2:00") == 'time { hours: "2" }'
 
+    # seconds and milliseconds
+    assert (
+        grammar.apply("12:34:16.356")
+        == 'time { hours: "12" minutes: "34" seconds: "16" milliseconds: "356" }'
+    )
+    assert (
+        grammar.apply("12:34:16.001")
+        == 'time { hours: "12" minutes: "34" seconds: "16" milliseconds: "1" }'
+    )
+    assert (
+        grammar.apply("12:34:00.051")
+        == 'time { hours: "12" minutes: "34" seconds: "0" milliseconds: "51" }'
+    )
+
     # test multi token functionality
     # range
     assert (

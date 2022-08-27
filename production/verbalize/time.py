@@ -60,9 +60,9 @@ class TimeFst(BaseFst):
         hours = pynutil.delete("hours:") + hours + pynutil.delete("|")
 
         # minutes are optional, to expand - use digit pairs expansion
-        minutes = pynutil.add_weight(cardinal.get_digit_pairs_fst(), 1.1)
-        minutes |= (pynutil.insert("o") + insert_space + DIGIT @ cardinal.get_digit_by_digit_fst())
-        minutes = pynutil.delete("minutes:") + minutes + pynutil.delete("|")
+        minutes_wo_tag = pynutil.add_weight(cardinal.get_digit_pairs_fst(), 1.1)
+        minutes_wo_tag |= (pynutil.insert("o") + insert_space + DIGIT @ cardinal.get_digit_by_digit_fst())
+        minutes = pynutil.delete("minutes:") + minutes_wo_tag + pynutil.delete("|")
         optional_minutes = pynini.closure(insert_space + minutes, 0, 1)
 
         # for suffix - just remove field, it is already normalized to be spelled
@@ -85,5 +85,53 @@ class TimeFst(BaseFst):
         hours_minutes_suffix |= hours + pynutil.insert(" o'clock")
         # if there is no suffix and minutes are zeros add "o'clock"
         hours_minutes_suffix |= hours + pynini.cross("minutes:00|", " o'clock")
+
+        # accurate time option
+        accurate_time = self._get_accurate_time_fst(cardinal) + optional_suffix
+        hours_minutes_suffix |= accurate_time
+
         graph = hours_minutes_suffix + optional_zone
         self._single_fst = self.delete_tokens(graph).optimize()
+
+    @staticmethod
+    def _get_accurate_time_fst(cardinal: CardinalFst) -> pynini.FstLike:
+        """
+        helper function that produces fst for accurate time - one with seconds/milliseconds.
+        Format is: hh:mm:ss.mmm
+        """
+        two_digits = pynini.closure(DIGIT, 1, 2) @ cardinal.get_cardinal_expanding_fst()
+
+        # hours
+        hours = pynutil.delete("hours:") + two_digits + pynutil.delete("|")
+        hours = (
+            pynutil.add_weight((hours + pynutil.insert(" hours ")), 1.1)
+            | pynini.cross("hours:1|", "one hour ")
+        )
+
+        # similar minutes, but allow it to be absent
+        minutes = pynutil.delete("minutes:") + two_digits + pynutil.delete("|")
+        minutes = (
+            pynutil.add_weight((minutes + pynutil.insert(" minutes")), 1.1)
+            | pynini.cross("minutes:1|", "one minute")
+            | pynutil.insert("zero minutes")
+        )
+
+        # special case for singular
+        singular_seconds = pynini.cross("seconds:1|", "one second")
+        # seconds expand the same way as minutes. seconds are expanded with suffix
+        seconds = pynutil.delete("seconds:") + two_digits + pynini.cross("|", " seconds")
+        seconds = singular_seconds | pynutil.add_weight(seconds, 1.1)
+
+        # special case for singular
+        singular_milliseconds = pynini.cross("milliseconds:1|", "one millisecond")
+        # milliseconds are expanded as cardinal with suffix
+        milliseconds = pynini.closure(DIGIT, 1, 3) @ cardinal.get_cardinal_expanding_fst()
+        milliseconds = pynutil.delete("milliseconds:") + milliseconds + pynini.cross("|", " milliseconds")
+        milliseconds = singular_milliseconds | pynutil.add_weight(milliseconds, 1.1)
+
+        hh_mm = hours + minutes
+        hh_mm_ss = hh_mm + pynutil.insert(" and ") + seconds
+        hh_mm_ms = hh_mm + pynutil.insert(" and ") + milliseconds
+        hh_mm_ss_ms = hh_mm + insert_space + seconds + pynutil.insert(" and ") + milliseconds
+        accurate_time = (hh_mm_ss | hh_mm_ms | hh_mm_ss_ms)
+        return accurate_time

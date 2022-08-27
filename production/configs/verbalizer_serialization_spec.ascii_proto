@@ -216,6 +216,12 @@ class_spec {
       field_path: "time.minutes"
     }
     record_spec {
+      field_path: "time.seconds"
+    }
+    record_spec {
+      field_path: "time.milliseconds"
+    }
+    record_spec {
       field_path: "time.suffix"
     }
     record_spec {

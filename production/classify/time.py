@@ -72,15 +72,28 @@ class TimeFst(BaseFst):
         minutes_double = [str(x) for x in range(10, 60)]
         minutes_single = pynini.union(*minutes_single)
         minutes_double = pynini.union(*minutes_double)
-        minutes = (pynutil.delete("0") + minutes_single) | minutes_double
-        minutes = pynutil.insert('minutes: "') + minutes + pynutil.insert('"')
+        minutes_wo_tag = (pynutil.delete("0") + minutes_single) | minutes_double
+        minutes = pynutil.insert('minutes: "') + minutes_wo_tag + pynutil.insert('"')
         minutes = pynutil.delete("00") | insert_space + minutes
+
+        seconds = pynutil.insert('seconds: "') + (minutes_wo_tag | pynini.cross("00", "0")) + pynutil.insert('"')
+        optional_seconds = pynini.closure(pynutil.delete(":") + insert_space + seconds, 0, 1)
+
+        # remove zeros in front
+        milliseconds = pynutil.add_weight(DIGIT + DIGIT + DIGIT, 1.1)
+        milliseconds |= pynutil.add_weight(pynutil.delete("0") + DIGIT + DIGIT, 1.09)
+        milliseconds |= pynutil.add_weight(pynutil.delete("0") + pynutil.delete("0") + DIGIT, 1.08)
+        milliseconds |= pynini.cross("000", "0")
+        milliseconds = pynutil.insert('milliseconds: "') + milliseconds + pynutil.insert('"')
+        optional_milliseconds = pynini.closure(pynutil.delete(".") + insert_space + milliseconds, 0, 1)
 
         # 2:30 pm, 02:30, 2:00
         graph_hm = (
             hours
             + pynutil.delete(":")
             + minutes
+            + optional_seconds
+            + optional_milliseconds
             + suffix_optional
             + time_zone_optional
         )
