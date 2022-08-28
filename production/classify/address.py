@@ -46,7 +46,8 @@ class AddressFst(BaseFst):
         super().__init__(name="address")
 
         # house number - just digits with optional dash, for ex. 123, 928-3313
-        house_number = DIGIT + pynini.closure(DIGIT | pynini.cross("-", ""))
+        house_number = pynini.closure(DIGIT, 1, 5)
+        house_number |= pynini.closure(DIGIT, 1, 3) + pynini.cross("-", "") + pynini.closure(DIGIT, 1, 4)
         house_number = pynutil.insert('house: "') + house_number + pynutil.insert('"')
 
         # street moved to separate method given complexity
@@ -62,9 +63,11 @@ class AddressFst(BaseFst):
         # there can be multiple words in town name, town can optionally have comma at the end
         town = (
             town
-            + pynini.closure(pynini.accep(" ") + pynutil.add_weight(town, 2.1))
+            + pynini.closure(pynini.accep(" ") + pynutil.add_weight(town, 2.1), 0, 2)
             + pynini.closure(pynutil.delete(","), 0, 1)
         )
+        # more weight for town to start from capital
+        town = (pynutil.add_weight(LOWER, 100) | UPPER) + town
         town = pynutil.add_weight(
             pynutil.insert('town: "') + town + pynutil.insert('"'), 1.1
         )
@@ -103,7 +106,7 @@ class AddressFst(BaseFst):
         house_street = house_number + pynini.accep(" ") + street
         # combine suite, house number and street. suite can go before house and street
         suite_house_street = (
-            suite + (pynini.accep(" ") | pynini.cross("-", " ")) + house_street
+            suite + pynini.accep(" ") + house_street
         )
         # or after
         suite_house_street |= (
@@ -137,7 +140,7 @@ class AddressFst(BaseFst):
         street_name = street_name + pynini.closure(pynini.cross("-", " ") + street_name)
         # there can be street name from multiple words
         street_name = street_name + pynini.closure(
-            pynini.accep(" ") + pynutil.add_weight(street_name, 2.1)
+            pynini.accep(" ") + pynutil.add_weight(street_name, 2.1), 0, 2
         )
         # having street name starting from capital letter is much more probable
         street_name = (pynutil.add_weight(LOWER, 100) | UPPER) + street_name
