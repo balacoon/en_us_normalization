@@ -78,7 +78,10 @@ class AddressFst(BaseFst):
         suite_type = pynini.closure(LOWER | SPACE, 1)
         suite_type = pynutil.delete("suite_type:") + suite_type + pynutil.delete("|")
         # suite number is just a number
-        suite_number = cardinal.get_cardinal_expanding_fst()
+        suite_number_digit = cardinal.get_cardinal_expanding_fst()
+        suite_number_alpha = pynini.closure(UPPER, 1)
+        suite_number = suite_number_digit | suite_number_alpha | (suite_number_digit + suite_number_alpha)
+
         suite_number = (
             pynutil.delete("suite_number:") + suite_number + pynutil.delete("|")
         )
