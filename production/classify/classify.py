@@ -62,7 +62,7 @@ class ClassifyFst(BaseFst):
         classify = (
             pynutil.add_weight(shortening.fst, 1.01)
             | pynutil.add_weight(abbreviation.fst, 1.1)
-            | pynutil.add_weight(address.fst, 1.01)
+            | pynutil.add_weight(address.fst, 1.05)
             | pynutil.add_weight(time.fst, 1.1)
             | pynutil.add_weight(date.fst, 1.01)
             | pynutil.add_weight(decimal.fst, 10.0)
