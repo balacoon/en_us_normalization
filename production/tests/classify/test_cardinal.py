@@ -19,7 +19,7 @@ def test_cardinal():
     # range
     assert (
         grammar.apply("12 - 15")
-        == 'cardinal { count: "12" } } tokens { name: "to" } tokens { cardinal { count: "15" }'
+        == 'cardinal { count: "12" } } tokens { cardinal { count: "15" }'
     )
     # sport score
     assert (
