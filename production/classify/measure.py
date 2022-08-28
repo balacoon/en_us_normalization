@@ -9,11 +9,15 @@ tokenize and classify measures
 import pynini
 from en_us_normalization.production.classify.decimal import DecimalFst
 from en_us_normalization.production.classify.fraction import FractionFst
-from en_us_normalization.production.english_utils import get_data_file_path, singular_to_plural_fst
+from en_us_normalization.production.english_utils import (
+    get_data_file_path,
+    singular_to_plural_fst,
+)
 from pynini.lib import pynutil
 
 from learn_to_normalize.grammar_utils.base_fst import BaseFst
 from learn_to_normalize.grammar_utils.shortcuts import delete_space, insert_space
+from learn_to_normalize.grammar_utils.data_loader import load_mapping
 
 
 class MeasureFst(BaseFst):
@@ -54,7 +58,12 @@ class MeasureFst(BaseFst):
             fraction = FractionFst()
 
         # expand units, i.e. kg -> kilograms
-        units_orig = pynini.string_file(get_data_file_path("measurements.tsv"))
+        units_orig = load_mapping(
+            get_data_file_path("measurements.tsv"),
+            key_case_agnostic=True,
+            key_with_dot=False,
+            val_case_agnostic=True,
+        )
         units_plural_orig = units_orig @ singular_to_plural_fst()
         units = self._add_units_suffix(units_orig, units_orig)
         units_plural = self._add_units_suffix(units_plural_orig, units_orig)
@@ -65,7 +74,11 @@ class MeasureFst(BaseFst):
             pynini.accep(".") + pynini.closure("0", 1)
         )
         # reusing decimal without qunatity
-        base_decimal_fst = pynutil.insert("decimal { ") + decimal.get_basic_decimal_fst() + pynutil.insert(" }")
+        base_decimal_fst = (
+            pynutil.insert("decimal { ")
+            + decimal.get_basic_decimal_fst()
+            + pynutil.insert(" }")
+        )
         decimal_with_singular_unit = one @ base_decimal_fst + units
         # generic case
         decimal_with_units = base_decimal_fst + units_plural
