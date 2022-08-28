@@ -68,7 +68,10 @@ class ElectronicFst(BaseFst):
         )
 
         # after domain there could be optional path
-        path = pynini.closure(pynutil.add_weight(NOT_SPACE, 1.01)) +  pynini.closure(NOT_PUNCT)
+        # should escape qoute so its parsed properly
+        non_space_char = pynutil.add_weight(NOT_SPACE, 1.01) | pynini.cross('"', '\\"') | pynini.cross('\\', '\\\\\\')
+        # should give up punctuation at the end to go to "right_punct"
+        path = pynini.closure(pynutil.add_weight(non_space_char, 1.01)) + pynini.closure(NOT_PUNCT)
         path = (
             pynutil.insert(' path: "')
             + pynini.accep("/")
