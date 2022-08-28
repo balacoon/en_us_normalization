@@ -139,6 +139,8 @@ class AddressFst(BaseFst):
         street_name = street_name + pynini.closure(
             pynini.accep(" ") + pynutil.add_weight(street_name, 2.1)
         )
+        # having street name starting from capital letter is much more probable
+        street_name = (pynutil.add_weight(LOWER, 100) | UPPER) + street_name
         street_name = (
             pynutil.insert('street_name: "') + street_name + pynutil.insert('"')
         )
