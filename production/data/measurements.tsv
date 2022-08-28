@@ -1,13 +1,14 @@
 ″	inch
 %	percent
+°	degree
 amu	atomic mass unit
 atm	atmosphere
 au	astronomical unit
 bar	bar
 bq	becquerel
-c	celsius
+°c	celsius
 cc	cubic centimetre
-ccm cubic centimetre
+ccm	cubic centimetre
 cd	candela
 cm	centimeter
 cm2	square centimeter
@@ -23,7 +24,7 @@ dm3	cubic deci meter
 dm³	cubic deci meter
 ds	deci second
 ev	electron volt
-f	fahrenheit
+°f	fahrenheit
 ft	foot
 g	gram
 gb	gigabyte
@@ -117,4 +118,3 @@ yd	yard
 μm	micrometer
 μs	microsecond
 ω	ohm
-%	percent
