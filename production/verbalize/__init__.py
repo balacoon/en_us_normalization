@@ -39,6 +39,7 @@ Rules for verbalization of different semiotic classes:
 
 """
 
+from en_us_normalization.production.verbalize.verbalize import VerbalizeFst
 from en_us_normalization.production.verbalize.address import AddressFst
 from en_us_normalization.production.verbalize.cardinal import CardinalFst
 from en_us_normalization.production.verbalize.date import DateFst
