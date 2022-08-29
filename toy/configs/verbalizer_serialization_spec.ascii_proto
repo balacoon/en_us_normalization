@@ -1,0 +1,14 @@
+class_spec {
+  semiotic_class: "cardinal"
+  style_spec {
+    record_spec {
+      field_path: "cardinal.prefix"
+    }
+    record_spec {
+      field_path: "cardinal.negative"
+    }
+    record_spec {
+      field_path: "cardinal.count"
+    }
+  }
+}
