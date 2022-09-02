@@ -44,11 +44,12 @@ class WordFst(BaseFst):
         # just alpha characters that can go directly to pronunciation generation
         unicode_char = pynini.string_file(get_data_file_path("unicode_chars.tsv"))
         apostrophe = pynini.accep("'")
+        hyphen = pynini.accep("-")
 
         # regular words
         alpha = pynutil.add_weight(ALPHA, 1.1) | unicode_char | TO_LOWER
         # word with optional apostroph inside
-        word = alpha + pynini.closure(alpha | apostrophe) + alpha
+        word = alpha + pynini.closure(alpha | apostrophe | hyphen) + alpha
         # allow also single letter words
         word |= alpha
 
