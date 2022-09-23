@@ -12,7 +12,7 @@ from pynini.lib import pynutil
 
 from learn_to_normalize.grammar_utils.base_fst import BaseFst
 from learn_to_normalize.grammar_utils.data_loader import load_union, load_csv
-from learn_to_normalize.grammar_utils.shortcuts import ALPHA, TO_LOWER
+from learn_to_normalize.grammar_utils.shortcuts import ALPHA, TO_LOWER, TO_UPPER
 
 
 class WordFst(BaseFst):
@@ -65,6 +65,14 @@ class WordFst(BaseFst):
         # allow apostrophe in front of the word if word is from the list
         shortened_words = load_union(get_data_file_path("front_apostrophe.tsv"), case_agnostic=True)
         word |= (apostrophe + shortened_words)
+
+        # connection to itself allows all-consonant words that are still recognized as words
+        # small hack to convert all-consonants to upper case
+        consonants = "bcdfghjklmnpqrstvwxz"
+        low_consonants = pynini.union(*[pynini.accep(x.lower()) @ pynini.closure(TO_UPPER) for x in consonants])
+        upper_consonants = pynini.union(*[pynini.accep(x.upper()) for x in consonants])
+        consonant_word = pynini.closure(low_consonants | upper_consonants, 1)
+        word |= consonant_word
 
         word = pynutil.insert('name: "') + word + pynutil.insert('"')
         self._single_fst = word.optimize()
