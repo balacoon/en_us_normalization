@@ -10,6 +10,7 @@ def test_abbreviation():
     loader = GrammarLoader(grammars_dir)
     grammar = loader.get_grammar("classify.abbreviation", "AbbreviationFst")
     assert grammar.apply("F.B.I.") == 'name: "FBI"'
+    assert grammar.apply("F...B") == 'name: "FB"'  # no matter the separation between consonants
     assert grammar.apply("FBI") == 'name: "FBI"'
     assert grammar.apply("f.b.i.") == 'name: "FBI"'
     assert grammar.apply("IEEE") == 'name: "IEEE"'

@@ -152,8 +152,12 @@ class AbbreviationFst(BaseFst):
         delete_dot = pynutil.delete(".")
         dot_abbr = pynini.closure((UPPER | (LOWER @ TO_UPPER)) + delete_dot, 1)
 
-        # 2. consonants abbreviation
-        consonant_abbr = pynini.closure(letters_sequence.consonants_fst, 1)
+        # 2. consonants abbreviation. it can have punctuation symbols inside of it,
+        # and still should be classified as abbreviation since it can't be pronounced.
+        punct_symbols = "\"|/\\%!~_$()'.,"
+        punct_symbols_del = [pynutil.delete(x) for x in punct_symbols]
+        optional_punct_del = pynini.closure(pynini.union(*punct_symbols_del))
+        consonant_abbr = letters_sequence.consonants_fst + pynini.closure(optional_punct_del + letters_sequence.consonants_fst)
 
         # 3. vowels abbreviation
         vowel_abbr = pynini.closure(
