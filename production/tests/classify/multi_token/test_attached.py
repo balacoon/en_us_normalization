@@ -26,3 +26,6 @@ def test_score():
     assert (
         grammar.apply("Hello#,") == 'tokens { name: "hello" } tokens { name: "hash" right_punct: "," }'
     )
+    assert (
+        grammar.apply("3-miles") == 'tokens { cardinal { count: "3" } } tokens { name: "miles" }'
+    )
