@@ -77,7 +77,7 @@ class WordFst(BaseFst):
         word = pynutil.insert('name: "') + word + pynutil.insert('"')
         self._single_fst = word.optimize()
         # allow some symbols inside of words that are simply deleted
-        in_symbols = "\"|/\\%!~_$()'.,"
+        in_symbols = "\"|/\\%!~_$()'.,—-"
         in_symbols_lst = [x for x in in_symbols]
         self.connect_to_self(connector_in=in_symbols_lst, connector_out=None, connector_spaces="none",
                              to_closure=True, to_closure_connector=True, weight=50)
