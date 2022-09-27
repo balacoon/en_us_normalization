@@ -94,6 +94,11 @@ class AttachedTokensFst(BaseFst):
             + optional_delete_hyphen
             + wrap_token(cardinal.fst + right_punct)
         )
+        number_plus_word = (
+            wrap_token(left_punct + cardinal.fst)
+            + optional_delete_hyphen
+            + wrap_token(word.fst + right_punct)
+        )
         # boundary between word and symbols is obvious
         word_plus_symbols = (
             wrap_token(left_punct + word.fst)
@@ -115,6 +120,7 @@ class AttachedTokensFst(BaseFst):
             abbr_plus_word
             | abbr_plus_number
             | pynutil.add_weight(word_plus_number, 1.1)
+            | pynutil.add_weight(number_plus_word, 1.1)
             | pynutil.add_weight(word_plus_symbols, 20)  # regular word weight is 10, avoid shadowing word + punct
             | pynutil.add_weight(symbols_plus_word, 20)  # regular word weight is 10, avoid shadowing punct + word
             | hashtag  # hashtag is overshadowed by symbols_plus_word but has higher weight
