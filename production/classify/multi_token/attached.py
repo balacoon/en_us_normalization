@@ -13,7 +13,7 @@ from en_us_normalization.production.classify.word import WordFst
 from pynini.lib import pynutil
 
 from learn_to_normalize.grammar_utils.base_fst import BaseFst
-from learn_to_normalize.grammar_utils.shortcuts import delete_space, insert_space, wrap_token
+from learn_to_normalize.grammar_utils.shortcuts import delete_space, insert_space
 
 
 class AttachedTokensFst(BaseFst):
@@ -37,8 +37,6 @@ class AttachedTokensFst(BaseFst):
         cardinal: CardinalFst = None,
         abbreviation: AbbreviationFst = None,
         word: WordFst = None,
-        left_punct: pynini.FstLike = None,
-        right_punct: pynini.FstLike = None,
     ):
         """
         constructor of transducer handling attached (merged) tokens
@@ -51,10 +49,6 @@ class AttachedTokensFst(BaseFst):
             abbreviation to reuse
         word: WordFst
             word to reuse
-        left_punct: pynini.FstLike
-            punctuation to the left of multi-token
-        right_punct: pynini.FstLike
-            punctuation to the right of multi-token
         """
         super().__init__(name="score")
 
@@ -66,56 +60,34 @@ class AttachedTokensFst(BaseFst):
             abbreviation = AbbreviationFst()
         if word is None:
             word = WordFst()
-        if left_punct is None and right_punct is None:
-            left_punct, right_punct = get_punctuation_rules()
 
         symbols = pynini.string_file(get_data_file_path("symbols.tsv")).optimize()
         # penalize adding more symbols, so if there is another option (for example punctuation) - go with that
         multiple_symbols = symbols + pynini.closure(pynutil.add_weight(insert_space, 10) + symbols)
-        delete_hyphen = insert_space + pynutil.delete("-")
-        optional_delete_hyphen = insert_space + pynini.closure(
-            pynutil.delete("-"), 0, 1
-        )
+        multiple_symbols = pynutil.insert("name: \"") + multiple_symbols + pynutil.insert("\"")
+        cross_hyphen = pynini.cross("-", " } tokens { ")
+        optional_cross_hyphen = pynutil.insert(" } tokens { ") + pynini.closure(pynutil.delete("-"), 0, 1)
+
         # boundary between abbreviation and word is not obvious, so expecting dash as a separator
-        abbr_plus_word = (
-            wrap_token(left_punct + abbreviation.fst)
-            + delete_hyphen
-            + wrap_token(word.fst + right_punct)
-        )
+        abbr_plus_word = abbreviation.fst + cross_hyphen + word.fst
+
         # boundary between abbreviation and number is obvious, so dash is optional
-        abbr_plus_number = (
-            wrap_token(left_punct + abbreviation.fst)
-            + optional_delete_hyphen
-            + wrap_token(cardinal.fst + right_punct)
-        )
+        abbr_plus_number = abbreviation.fst + optional_cross_hyphen + cardinal.fst
+
+        # try to avoid situations when string with all consonants is classified as word
+        word_or_abbr = pynutil.add_weight(word.fst, 1.1) | abbreviation.fst
+
         # boundary between word and number is also obvious
-        word_plus_number = (
-            wrap_token(left_punct + word.fst)
-            + optional_delete_hyphen
-            + wrap_token(cardinal.fst + right_punct)
-        )
-        number_plus_word = (
-            wrap_token(left_punct + cardinal.fst)
-            + optional_delete_hyphen
-            + wrap_token(word.fst + right_punct)
-        )
+        word_plus_number = word_or_abbr + optional_cross_hyphen + cardinal.fst
+        number_plus_word = cardinal.fst + optional_cross_hyphen + word_or_abbr
+
         # boundary between word and symbols is obvious
-        word_plus_symbols = (
-            wrap_token(left_punct + word.fst)
-            + optional_delete_hyphen
-            + wrap_token(pynutil.insert("name: \"") + multiple_symbols + pynutil.insert("\"") + right_punct)
-        )
-        # same the other way around
-        symbols_plus_word = (
-            wrap_token(left_punct + pynutil.insert("name: \"") + multiple_symbols + pynutil.insert("\""))
-            + optional_delete_hyphen
-            + wrap_token(word.fst + right_punct)
-        )
-        hashtag = (
-            wrap_token(left_punct + pynini.cross("#", "name: \"hashtag\""))
-            + insert_space
-            + wrap_token(word.fst + right_punct)
-        )
+        word_plus_symbols = word_or_abbr + optional_cross_hyphen + multiple_symbols
+        symbols_plus_word = multiple_symbols + optional_cross_hyphen + word_or_abbr
+
+        # special case for insta ;)
+        hashtag = pynini.cross("#", "name: \"hashtag\"") + insert_space + word_or_abbr
+
         graph = (
             abbr_plus_word
             | abbr_plus_number

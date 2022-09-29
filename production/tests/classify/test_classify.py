@@ -23,3 +23,7 @@ def test_classify():
     assert grammar.apply("hello#") == 'tokens { name: "hello" } tokens { name: "hash" }'
     assert grammar.apply("_hello_") == 'tokens { left_punct: "_" name: "hello" right_punct: "_" }'
     assert grammar.apply("“hello”") == 'tokens { left_punct: "“" name: "hello" right_punct: "”" }'
+
+    # allows connecting tokens with punctuation marks and symbols
+    assert grammar.apply("radio/video") == 'tokens { name: "radio" } tokens { name: "video" }'
+    assert grammar.apply("hello,-world") == 'tokens { name: "hello" right_punct: ",-" } tokens { name: "world" }'

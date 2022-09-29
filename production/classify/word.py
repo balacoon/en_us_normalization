@@ -65,19 +65,5 @@ class WordFst(BaseFst):
         # allow apostrophe in front of the word if word is from the list
         shortened_words = load_union(get_data_file_path("front_apostrophe.tsv"), case_agnostic=True)
         word |= (apostrophe + shortened_words)
-
-        # connection to itself allows all-consonant words that are still recognized as words
-        # small hack to convert all-consonants to upper case
-        consonants = "bcdfghjklmnpqrstvwxz"
-        low_consonants = pynini.union(*[pynini.accep(x.lower()) @ pynini.closure(TO_UPPER) for x in consonants])
-        upper_consonants = pynini.union(*[pynini.accep(x.upper()) for x in consonants])
-        consonant_word = pynini.closure(low_consonants | upper_consonants, 1)
-        word |= consonant_word
-
         word = pynutil.insert('name: "') + word + pynutil.insert('"')
         self._single_fst = word.optimize()
-        # allow some symbols inside of words that are simply deleted
-        in_symbols = "\"|/\\%!~_$()'.,—-"
-        in_symbols_lst = [x for x in in_symbols]
-        self.connect_to_self(connector_in=in_symbols_lst, connector_out=None, connector_spaces="none",
-                             to_closure=True, to_closure_connector=True, weight=50)

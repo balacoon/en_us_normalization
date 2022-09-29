@@ -14,8 +14,3 @@ def test_word():
     assert grammar.apply("thomas'") == 'name: "thomas\'"'
     assert grammar.apply("'bout") == 'name: "\'bout"'
     assert grammar.apply("So-called") == 'name: "so-called"'
-
-    # multi-token
-    # connected with slash
-    assert grammar.apply("radio/video") == 'name: "radio" } tokens { name: "video"'
-    assert grammar.apply("radio//video") == 'name: "radio" } tokens { name: "video"'

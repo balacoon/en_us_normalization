@@ -25,10 +25,12 @@ from en_us_normalization.production.classify.telephone import TelephoneFst
 from en_us_normalization.production.classify.time import TimeFst
 from en_us_normalization.production.classify.verbatim import VerbatimFst
 from en_us_normalization.production.classify.word import WordFst
+from en_us_normalization.production.english_utils import get_data_file_path
 from pynini.lib import pynutil
 
 from learn_to_normalize.grammar_utils.base_fst import BaseFst
-from learn_to_normalize.grammar_utils.shortcuts import delete_extra_space, delete_space, wrap_token, TO_LOWER, LOWER, CHAR
+from learn_to_normalize.grammar_utils.data_loader import load_union
+from learn_to_normalize.grammar_utils.shortcuts import delete_extra_space, insert_space, delete_space, wrap_token, TO_LOWER, LOWER, CHAR
 
 
 class ClassifyFst(BaseFst):
@@ -77,15 +79,29 @@ class ClassifyFst(BaseFst):
             | pynutil.add_weight(verbatim.fst, 100)
             | pynutil.add_weight(roman.fst, 1.09)
         )
-        token = wrap_token(left_punct + classify + right_punct)
-
         # also add multi-token taggers
-        attached = AttachedTokensFst(
-            cardinal, abbreviation, word, left_punct, right_punct
-        )
-        token |= pynutil.add_weight(attached.fst, 2.0)
+        attached = AttachedTokensFst(cardinal, abbreviation, word)
+        classify |= pynutil.add_weight(attached.fst, 2.0)
 
-        graph = token + pynini.closure(delete_extra_space + token)
+        # token with prefix and optional punctuation on the left
+        token = (
+            pynutil.insert("tokens { ")
+            + pynini.closure(left_punct, 0, 1)
+            + classify
+        )
+
+        # tokens can be connected in various ways.
+        # 1. most typical - optional punctuation and whitespace
+        # 2. with punctuation, but without whitespace
+        # 3. some unpronounceable symbols (slash, etc) without whitespace (low prob)
+        connection = pynini.closure(right_punct, 0, 1) + pynutil.insert(" }") + delete_extra_space
+        connection |= right_punct + pynutil.insert(" }") + insert_space
+        symbols = load_union(get_data_file_path("symbols.tsv"), column=0)
+        delete_symbols = pynutil.delete(pynutil.add_weight(pynini.closure(symbols, 1), 50))
+        connection |= pynini.closure(right_punct, 0, 1) + pynutil.insert(" }") + delete_symbols + insert_space
+
+        # repeated tokens
+        graph = token + pynini.closure(connection + token) + pynini.closure(right_punct, 0, 1) + pynutil.insert(" }")
         graph = delete_space + graph + delete_space
         # to enable detection of all-capitals lines - uncomment
         # graph = self._fix_all_capital_fst() @ graph

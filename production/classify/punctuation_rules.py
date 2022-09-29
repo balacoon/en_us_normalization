@@ -39,15 +39,11 @@ def get_punctuation_rules() -> Tuple[pynini.FstLike, pynini.FstLike]:
     left_punct = pynini.closure(punct, 1)
     # attach dangling punctuation on the left with lower probability
     left_punct |= pynutil.add_weight(multiple_punct, 1.2)
-    left_punct = pynini.closure(
-        pynutil.insert('left_punct: "') + left_punct + pynutil.insert('" '), 0, 1
-    )
+    left_punct = pynutil.insert('left_punct: "') + left_punct + pynutil.insert('" ')
 
     right_punct = pynini.closure(punct, 1)
     # attach dangling punctuation on the right with low probability
     right_punct |= pynutil.add_weight(multiple_punct, 1.1)
-    right_punct = pynini.closure(
-        pynutil.insert(' right_punct: "') + right_punct + pynutil.insert('"'), 0, 1
-    )
+    right_punct = pynutil.insert(' right_punct: "') + right_punct + pynutil.insert('"')
 
     return left_punct.optimize(), right_punct.optimize()

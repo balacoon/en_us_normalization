@@ -13,19 +13,19 @@ def test_score():
     grammar = loader.get_grammar("classify.multi_token.attached", "AttachedTokensFst")
     assert (
         grammar.apply("look33")
-        == 'tokens { name: "look" } tokens { cardinal { count: "33" } }'
+        == 'name: "look" } tokens { cardinal { count: "33" }'
     )
     assert (
         grammar.apply("AT&T-wireless")
-        == 'tokens { name: "AT and T" } tokens { name: "wireless" }'
+        == 'name: "AT and T" } tokens { name: "wireless"'
     )
     # allow word to be attached to symbols
     assert (
-        grammar.apply("Hello#") == 'tokens { name: "hello" } tokens { name: "hash" }'
+        grammar.apply("Hello#") == 'name: "hello" } tokens { name: "hash"'
     )
     assert (
-        grammar.apply("Hello#,") == 'tokens { name: "hello" } tokens { name: "hash" right_punct: "," }'
+        grammar.apply("Hello#") == 'name: "hello" } tokens { name: "hash"'
     )
     assert (
-        grammar.apply("3-miles") == 'tokens { cardinal { count: "3" } } tokens { name: "miles" }'
+        grammar.apply("3-miles") == 'cardinal { count: "3" } } tokens { name: "miles"'
     )
