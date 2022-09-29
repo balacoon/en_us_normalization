@@ -76,7 +76,7 @@ class ClassifyFst(BaseFst):
             | pynutil.add_weight(electronic.fst, 1.1)
             | pynutil.add_weight(fraction.fst, 10.0)
             | pynutil.add_weight(word.fst, 10)
-            | pynutil.add_weight(verbatim.fst, 100)
+            | pynutil.add_weight(verbatim.fst, 500)
             | pynutil.add_weight(roman.fst, 1.09)
         )
         # also add multi-token taggers
