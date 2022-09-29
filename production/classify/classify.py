@@ -81,7 +81,7 @@ class ClassifyFst(BaseFst):
         )
         # also add multi-token taggers
         attached = AttachedTokensFst(cardinal, abbreviation, word)
-        classify |= pynutil.add_weight(attached.fst, 2.0)
+        classify |= pynutil.add_weight(attached.fst, 11.0)
 
         # token with prefix and optional punctuation on the left
         token = (
@@ -95,7 +95,7 @@ class ClassifyFst(BaseFst):
         # 2. with punctuation, but without whitespace
         # 3. some unpronounceable symbols (slash, etc) without whitespace (low prob)
         connection = pynini.closure(right_punct, 0, 1) + pynutil.insert(" }") + delete_extra_space
-        connection |= right_punct + pynutil.insert(" }") + insert_space
+        connection |= right_punct + pynutil.insert(" }") + pynutil.add_weight(insert_space, 30)
         symbols = load_union(get_data_file_path("symbols.tsv"), column=0)
         delete_symbols = pynutil.delete(pynutil.add_weight(pynini.closure(symbols, 1), 50))
         connection |= pynini.closure(right_punct, 0, 1) + pynutil.insert(" }") + delete_symbols + insert_space
