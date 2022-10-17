@@ -43,7 +43,7 @@ class WordFst(BaseFst):
         super().__init__(name="word")
         # just alpha characters that can go directly to pronunciation generation
         unicode_char = pynini.string_file(get_data_file_path("unicode_chars.tsv"))
-        apostrophe = pynini.accep("'")
+        apostrophe = pynini.accep("'") | pynini.cross("’", "'")
         hyphen = pynini.accep("-")
 
         # regular words
