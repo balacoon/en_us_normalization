@@ -8,12 +8,12 @@ import pynini
 from en_us_normalization.production.english_utils import get_data_file_path
 from en_us_normalization.production.classify.abbreviation import AbbreviationFst
 from en_us_normalization.production.classify.cardinal import CardinalFst
-from en_us_normalization.production.classify.punctuation_rules import get_punctuation_rules
 from en_us_normalization.production.classify.word import WordFst
 from pynini.lib import pynutil
 
 from learn_to_normalize.grammar_utils.base_fst import BaseFst
-from learn_to_normalize.grammar_utils.shortcuts import delete_space, insert_space
+from learn_to_normalize.grammar_utils.data_loader import load_union
+from learn_to_normalize.grammar_utils.shortcuts import delete_space, insert_space, ALNUM, CHAR, PUNCT
 
 
 class AttachedTokensFst(BaseFst):
@@ -61,7 +61,14 @@ class AttachedTokensFst(BaseFst):
         if word is None:
             word = WordFst()
 
-        symbols = pynini.string_file(get_data_file_path("symbols.tsv")).optimize()
+        known_symbols = pynini.string_file(get_data_file_path("symbols.tsv")).optimize()
+        # unknown symbols - those that can't be pronounced and should be just deleted:
+        # any character, except [0-9], [a-zA-Z], punctuation, known symbols
+        unknown_symbols = pynini.difference(pynini.difference(
+            pynini.difference(CHAR, ALNUM), PUNCT),
+            load_union(get_data_file_path("symbols.tsv"))).optimize()
+        unknown_symbols = pynutil.delete(unknown_symbols)
+        symbols = known_symbols | pynutil.add_weight(unknown_symbols, 30)
         # penalize adding more symbols, so if there is another option (for example punctuation) - go with that
         multiple_symbols = symbols + pynini.closure(pynutil.add_weight(insert_space, 10) + symbols)
         multiple_symbols = pynutil.insert("name: \"") + multiple_symbols + pynutil.insert("\"")
@@ -84,6 +91,8 @@ class AttachedTokensFst(BaseFst):
         # boundary between word and symbols is obvious
         word_plus_symbols = word_or_abbr + optional_cross_hyphen + multiple_symbols
         symbols_plus_word = multiple_symbols + optional_cross_hyphen + word_or_abbr
+        word_plus_unk_symbols = word_or_abbr + pynini.closure(unknown_symbols, 1)
+        unk_symbols_plus_word = pynini.closure(unknown_symbols, 1) + word_or_abbr
 
         # special case for insta ;)
         hashtag = pynini.cross("#", "name: \"hashtag\"") + insert_space + word_or_abbr
@@ -95,6 +104,8 @@ class AttachedTokensFst(BaseFst):
             | pynutil.add_weight(number_plus_word, 1.1)
             | pynutil.add_weight(word_plus_symbols, 20)  # regular word weight is 10, avoid shadowing word + punct
             | pynutil.add_weight(symbols_plus_word, 20)  # regular word weight is 10, avoid shadowing punct + word
+            | pynutil.add_weight(word_plus_unk_symbols, 25)  # regular word plus unk symbol where latter is deleted
+            | pynutil.add_weight(unk_symbols_plus_word, 25)  # unk symbol plus regular word where former is deleted
             | hashtag  # hashtag is overshadowed by symbols_plus_word but has higher weight
         )
         self._multi_fst = graph.optimize()

@@ -24,7 +24,7 @@ def test_score():
         grammar.apply("Hello#") == 'name: "hello" } tokens { name: "hash"'
     )
     assert (
-        grammar.apply("Hello#") == 'name: "hello" } tokens { name: "hash"'
+        grammar.apply("HelloÑ") == 'name: "hello"'
     )
     assert (
         grammar.apply("3-miles") == 'cardinal { count: "3" } } tokens { name: "miles"'
