@@ -20,6 +20,7 @@ def test_classify():
 
     # disambiguate word + symbol vs word + punctiuation
     assert grammar.apply("hello,") == 'tokens { name: "hello" right_punct: "," }'
+    assert grammar.apply("helloÑ,") == 'tokens { name: "hello" right_punct: "," }'
     assert grammar.apply("hello#") == 'tokens { name: "hello" } tokens { name: "hash" }'
     assert grammar.apply("_hello_") == 'tokens { left_punct: "_" name: "hello" right_punct: "_" }'
     assert grammar.apply("“hello”") == 'tokens { left_punct: "“" name: "hello" right_punct: "”" }'

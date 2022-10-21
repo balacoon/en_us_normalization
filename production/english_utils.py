@@ -10,7 +10,8 @@ import pynini
 from pynini.examples import plurals
 from pynini.lib import pynutil
 
-from learn_to_normalize.grammar_utils.shortcuts import SIGMA
+from learn_to_normalize.grammar_utils.data_loader import load_union
+from learn_to_normalize.grammar_utils.shortcuts import SIGMA, ALNUM, CHAR, PUNCT
 
 
 def get_data_dir() -> str:
@@ -43,6 +44,14 @@ def get_data_file_path(*args) -> str:
         absolute path to the file
     """
     return os.path.join(get_data_dir(), *args)
+
+
+# fst with unknown symbols
+unk_symbols = pynini.difference(CHAR, ALNUM)  # anything except [0-9] and [a-zA-Z]
+unk_symbols = pynini.difference(unk_symbols, PUNCT)  # except punctuation marks
+unk_symbols = pynini.difference(unk_symbols, load_union(get_data_file_path("symbols.tsv")))  # except known symbols
+unk_symbols = pynini.difference(unk_symbols, pynini.accep("#"))  # special case which is read poorly from symbols
+UNK_SYMBOLS = pynutil.delete(unk_symbols).optimize()
 
 
 def singular_to_plural_fst():

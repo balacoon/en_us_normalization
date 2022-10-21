@@ -11,6 +11,7 @@ from typing import Tuple
 import pynini
 from pynini.lib import pynutil
 
+from en_us_normalization.production.english_utils import UNK_SYMBOLS
 from learn_to_normalize.grammar_utils.shortcuts import PUNCT, delete_space
 
 
@@ -34,7 +35,12 @@ def get_punctuation_rules() -> Tuple[pynini.FstLike, pynini.FstLike]:
     """
     punct = pynutil.add_weight(PUNCT, 1.1) | pynini.cross('"', '\\"')
     multiple_punct = delete_space + punct + delete_space
-    multiple_punct = pynini.closure(multiple_punct, 1)
+    # delete unknown symbols if they are mixed with punctuation marks
+    multiple_punct = (
+        pynini.closure(UNK_SYMBOLS)
+        + multiple_punct
+        + pynini.closure(multiple_punct | UNK_SYMBOLS)
+    )
 
     left_punct = pynutil.add_weight(pynini.closure(punct, 1), 1.2)
     # attach dangling punctuation on the left with lower probability
